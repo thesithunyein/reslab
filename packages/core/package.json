@@ -19,7 +19,8 @@
     "build": "tsc -p tsconfig.build.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "vitest run",
-    "demo": "tsx examples/honest-flow.ts"
+    "demo": "tsx examples/honest-flow.ts",
+    "report": "tsx examples/report.ts"
   },
   "devDependencies": {
     "tsx": "^4.19.0",

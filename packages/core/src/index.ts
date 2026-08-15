@@ -13,3 +13,5 @@ export * from './prereg.js';
 export * from './special-functions.js';
 export * from './stats.js';
 export * from './verify.js';
+export * from './llm/featherless.js';
+export * from './llm/writeup.js';

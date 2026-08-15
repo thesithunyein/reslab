@@ -11,7 +11,8 @@
     "build": "npm run build -w @reslab/core",
     "test": "npm run test -w @reslab/core",
     "typecheck": "npm run typecheck -w @reslab/core",
-    "demo": "npm run demo -w @reslab/core"
+    "demo": "npm run demo -w @reslab/core",
+    "report": "npm run report -w @reslab/core"
   },
   "engines": {
     "node": ">=20"
