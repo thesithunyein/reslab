@@ -98,10 +98,10 @@ reslab/
 │  │  └─ detectors.ts           # p-hacking / HARKing deviation detectors
 │  ├─ test/                     # 78 tests, all green
 │  └─ examples/honest-flow.ts   # end-to-end demo (npm run demo)
-├─ site/                        # product site (static, dark isometric branding)
-│  └─ index.html                 #   deployed to reslab.sithunyein.com
+├─ docs/                        # product site (static, dark isometric branding)
+│  └─ index.html                 #   GitHub Pages + reslab.sithunyein.com
 └─ .github/workflows/ci.yml     # typecheck + tests on every push
-   .github/workflows/deploy.yml # Cloudflare Pages deploy for site/
+   .github/workflows/deploy.yml # Cloudflare Pages deploy for docs/
 ```
 
 ## Live site
