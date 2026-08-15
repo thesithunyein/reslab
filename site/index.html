@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ResLab — the lab notebook that keeps science honest</title>
+<meta name="description" content="Design, pre-register, analyze, verify, detect. Real statistics, hard verification, tamper-evident provenance. No hallucinations." />
+<style>
+  :root {
+    --bg: #000;
+    --panel: #0c0c0e;
+    --line: #1f1f24;
+    --text: #f4f4f5;
+    --muted: #9b9ba3;
+    --accent: #ffffff;
+    --warn: #ffd166;
+    --ok: #6ee7a0;
+    --code: #d4d4d8;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 960px; margin: 0 auto; padding: 0 24px; }
+
+  /* nav */
+  nav {
+    position: sticky; top: 0; z-index: 10;
+    background: rgba(0,0,0,0.85); backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--line);
+  }
+  nav .wrap { display: flex; align-items: center; gap: 16px; height: 60px; }
+  nav img { height: 26px; width: auto; }
+  nav .name { font-weight: 700; letter-spacing: 0.5px; }
+  nav .links { margin-left: auto; display: flex; gap: 20px; }
+  nav a { color: var(--muted); text-decoration: none; font-size: 14px; }
+  nav a:hover { color: var(--text); }
+
+  /* hero */
+  header {
+    padding: 84px 0 64px;
+    text-align: center;
+    background:
+      radial-gradient(ellipse 80% 60% at 50% -10%, rgba(255,255,255,0.06), transparent 60%);
+  }
+  header .logo { width: 180px; height: auto; margin-bottom: 28px; }
+  header h1 { font-size: clamp(30px, 5vw, 46px); font-weight: 800; letter-spacing: -0.5px; }
+  header .tagline {
+    margin-top: 14px; color: var(--muted); font-size: clamp(16px, 2.5vw, 19px); max-width: 640px;
+    margin-left: auto; margin-right: auto;
+  }
+  header .flow { margin-top: 10px; color: var(--warn); font-family: ui-monospace, "Cascadia Code", monospace; font-size: 14px; letter-spacing: 2px; }
+  .badges { margin-top: 26px; display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+  .badges img { height: 22px; }
+  .cta { margin-top: 30px; display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+  .btn {
+    display: inline-block; padding: 12px 26px; border-radius: 8px; font-weight: 600;
+    text-decoration: none; font-size: 15px; border: 1px solid var(--line); transition: all 0.15s;
+  }
+  .btn-primary { background: #fff; color: #000; border-color: #fff; }
+  .btn-primary:hover { background: #e4e4e7; }
+  .btn-ghost { color: var(--text); }
+  .btn-ghost:hover { border-color: var(--muted); }
+
+  /* sections */
+  section { padding: 56px 0; border-top: 1px solid var(--line); }
+  .kicker { color: var(--warn); font-family: ui-monospace, monospace; font-size: 12px; letter-spacing: 3px; text-transform: uppercase; }
+  h2 { font-size: clamp(24px, 3.5vw, 32px); font-weight: 700; margin: 8px 0 22px; letter-spacing: -0.3px; }
+  h3 { font-size: 17px; font-weight: 700; margin: 18px 0 6px; }
+  p { color: var(--muted); margin-bottom: 12px; }
+  p strong, li strong { color: var(--text); }
+  ul { list-style: none; }
+  li { color: var(--muted); margin-bottom: 10px; padding-left: 24px; position: relative; }
+  li::before { content: "▸"; position: absolute; left: 0; color: var(--warn); }
+
+  /* steps */
+  .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin-top: 10px; }
+  .step { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 20px; }
+  .step .num { font-family: ui-monospace, monospace; color: var(--warn); font-size: 13px; letter-spacing: 1px; }
+  .step h3 { margin-top: 8px; }
+
+  /* terminal */
+  .term {
+    background: #0a0a0c; border: 1px solid var(--line); border-radius: 12px; overflow: hidden;
+    margin-top: 18px;
+  }
+  .term .bar { display: flex; gap: 6px; padding: 12px 16px; border-bottom: 1px solid var(--line); }
+  .term .dot { width: 10px; height: 10px; border-radius: 50%; }
+  .term .dot.r { background: #f87171; } .term .dot.y { background: #fbbf24; } .term .dot.g { background: #34d399; }
+  .term .title { margin-left: 8px; font-family: ui-monospace, monospace; font-size: 12px; color: var(--muted); }
+  .term pre {
+    padding: 18px 20px; overflow-x: auto; font-family: ui-monospace, "Cascadia Code", monospace;
+    font-size: 12.5px; line-height: 1.55; color: var(--code); white-space: pre;
+  }
+  .term .hl { color: var(--warn); }
+  .term .ok { color: var(--ok); }
+  .term .rule { color: #52525b; }
+
+  /* verification table */
+  table { width: 100%; border-collapse: collapse; margin-top: 12px; font-size: 14px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); }
+  th { color: var(--muted); font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; }
+  td code { font-family: ui-monospace, monospace; color: var(--code); }
+
+  footer { padding: 40px 0 60px; text-align: center; color: var(--muted); font-size: 13px; border-top: 1px solid var(--line); }
+  footer a { color: var(--text); }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <img src="assets/logo.png" alt="ResLab" />
+    <span class="name">ResLab</span>
+    <div class="links">
+      <a href="#problem">Problem</a>
+      <a href="#how">How it works</a>
+      <a href="#demo">Demo</a>
+      <a href="#verify">Verification</a>
+      <a href="https://github.com/thesithunyein/reslab">GitHub ↗</a>
+    </div>
+  </div>
+</nav>
+
+<header>
+  <div class="wrap">
+    <img class="logo" src="assets/logo.png" alt="ResLab logo" />
+    <h1>The lab notebook that keeps science honest.</h1>
+    <p class="tagline">Real statistics, hard verification, tamper-evident provenance. ResLab makes honest analysis the path of least resistance — and catches you before you p-hack.</p>
+    <p class="flow">design → pre-register → analyze → verify → detect</p>
+    <div class="badges">
+      <img src="https://img.shields.io/github/actions/workflow/status/thesithunyein/reslab/ci.yml?label=CI" alt="CI" />
+      <img src="https://img.shields.io/github/license/thesithunyein/reslab" alt="License" />
+      <img src="https://img.shields.io/badge/tests-78%20passing-2ea44f" alt="Tests" />
+      <img src="https://img.shields.io/badge/TypeScript-5.6-3178C6" alt="TypeScript" />
+    </div>
+    <div class="cta">
+      <a class="btn btn-primary" href="https://github.com/thesithunyein/reslab">View the source</a>
+      <a class="btn btn-ghost" href="#demo">Watch it run</a>
+    </div>
+  </div>
+</header>
+
+<section id="problem">
+  <div class="wrap">
+    <div class="kicker">The problem</div>
+    <h2>P-hacking is the reproducibility crisis.</h2>
+    <p>Under pressure, researchers try a different test, peek at the data, or drop an outlier — until something becomes significant. That is p-hacking, and it quietly corrupts a large share of published findings. Generic AI data tools make it <strong>worse</strong>: they answer confidently, never check whether an analysis was appropriate, and give users no guardrail between exploration and claim-making.</p>
+    <p>ResLab is built the other way. Every statistic is <strong>computed, not generated</strong>. Every result passes <strong>code-level verification</strong> before it can enter the record. Every action lands in a <strong>hash-chained audit log</strong> where silent edits are impossible. And a deterministic detector suite flags the classic p-hacking patterns — <strong>for review</strong>, with the human always deciding.</p>
+  </div>
+</section>
+
+<section id="how">
+  <div class="wrap">
+    <div class="kicker">How it works</div>
+    <h2>The honest research flow, enforced by design.</h2>
+    <div class="steps">
+      <div class="step"><div class="num">01 · DESIGN</div><h3>Before any data</h3><p>Hypothesis, outcome, planned test, alpha, sample size — plus power analysis that tells you what effect you can actually detect with the sample you can afford.</p></div>
+      <div class="step"><div class="num">02 · PRE-REGISTER</div><h3>Locked, tamper-evident</h3><p>The plan is sealed with a SHA-256 checksum and recorded in a hash-chained audit log. Revisions create new versions — the original is never mutated.</p></div>
+      <div class="step"><div class="num">03 · ANALYZE</div><h3>Real numbers only</h3><p>t, Welch, paired t, ANOVA, Pearson, Mann-Whitney, Levene, Jarque-Bera — a real statistics engine computes every value. No LLM generates a number.</p></div>
+      <div class="step"><div class="num">04 · TWO LANES</div><h3>Confirmatory vs exploratory</h3><p>Claims come only from the pre-registered lane. Post-hoc exploration is allowed — but labeled and walled off. Hypotheses, never conclusions.</p></div>
+      <div class="step"><div class="num">05 · DETECT</div><h3>The guardian</h3><p>Test switching, tail switching, outcome switching, optional stopping, subgroup slicing, undeclared outlier removal, multiple comparisons — each flagged with its bias explained.</p></div>
+      <div class="step"><div class="num">06 · PROVE</div><h3>Reproducible forever</h3><p>The audit chain verifies nothing was changed, and a reproducibility recipe lets anyone replay the exact analysis — same data, same tests, same numbers.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="demo">
+  <div class="wrap">
+    <div class="kicker">Live output — real, reproducible</div>
+    <h2>Watch the guardian catch a p-hacking pattern.</h2>
+    <p>This is the actual output of the engine's end-to-end honest-flow demo, run on deterministic seeded data. Every number below is computed, verified, and identical on every run.</p>
+    <div class="term">
+      <div class="bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="title">npm run demo — honest-flow.ts</span></div>
+<pre><span class="rule">========================================================================</span>
+  ResLab - the lab notebook that keeps science honest
+  Design -> pre-register -> analyze -> verify -> detect
+<span class="rule">========================================================================</span>
+
+<span class="hl">1. DESIGN</span>
+   Title: Spaced repetition vs. massed practice for online learners
+   Planned test: welch_t | tails: 2 | alpha: 0.05
+   Power note: With n = 63 per group and d = 0.5, estimated power is 80.1% (target 80%). Power is adequate.
+
+<span class="hl">2. PRE-REGISTRATION LOCKED</span>
+   Checksum: cc970bad11f6455c...
+   Lock verified: TRUE
+
+<span class="hl">3. DATA COLLECTED</span> (deterministic, reproducible)
+   Control  n=40  mean=67.5089  sd=9.392
+   Treated  n=40  mean=78.1849  sd=10.9128
+   [!] With n = 40 per group and d = 0.5, estimated power is 60.9% (target 80%). You are underpowered...
+
+<span class="hl">4. CONFIRMATORY ANALYSIS</span> (pre-registered welch_t on exam_score)
+   t = -4.6896  df = 76.31  p = 1.176e-5  d = -1.0486
+   Hard verification: <span class="ok">PASSED [OK]</span>
+   Compliance: <span class="ok">COMPLIANT [OK]</span>
+
+<span class="hl">5. EXPLORATORY ANALYSIS</span> (post-hoc Mann-Whitney, labeled, not confirmatory)
+   U = 363  p = 2.668e-5
+
+<span class="hl">6. INTEGRITY DETECTORS</span>
+   [MEDIUM] Sample smaller than planned yet significant: planned n=63/group, ran n=40, p=0.000 &lt; alpha=0.05.
+     -&gt; A significant result from fewer participants than the power analysis demanded is
+        consistent with stopping early once significance appeared.
+
+<span class="hl">7. PROVENANCE</span>
+   Audit log: 5 events, chain INTACT [OK]
+   Recipe (reproduce this analysis): 2db88206176292fc...
+<span class="rule">========================================================================</span></pre>
+    </div>
+  </div>
+</section>
+
+<section id="verify">
+  <div class="wrap">
+    <div class="kicker">Verification, not vibes</div>
+    <h2>The engine is validated against known values.</h2>
+    <p>The statistics library is cross-checked against published reference values — the same numbers you'd get from R or scipy — in an automated test suite (78 tests, all green in CI).</p>
+    <table>
+      <tr><th>Check</th><th>Expected</th><th>Source</th></tr>
+      <tr><td>t(10, two-sided, α = 0.05)</td><td><code>2.228 → p ≈ 0.05</code></td><td>t-table</td></tr>
+      <tr><td>F(2, 27) 95th percentile</td><td><code>3.354 → p ≈ 0.05</code></td><td>F-table</td></tr>
+      <tr><td>R sleep dataset, paired t</td><td><code>t = −4.0621, df = 9, p = 0.002833</code></td><td>R</td></tr>
+      <tr><td>R PlantGrowth ANOVA</td><td><code>F = 4.846, p = 0.01591, η² = 0.264</code></td><td>R</td></tr>
+      <tr><td>Anscombe I correlation</td><td><code>r = 0.81642, p = 0.00217</code></td><td>Anscombe</td></tr>
+      <tr><td>Mann-Whitney, fully separated n₁=n₂=4</td><td><code>U = 0, p = 2/70 exactly</code></td><td>exact enumeration</td></tr>
+    </table>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p><strong>ResLab</strong> — built for Impact Forge 2026. Every number is computed, verified, and reproducible.</p>
+    <p><a href="https://github.com/thesithunyein/reslab">github.com/thesithunyein/reslab</a> · reslab.sithunyein.com</p>
+  </div>
+</footer>
+
+</body>
+</html>
