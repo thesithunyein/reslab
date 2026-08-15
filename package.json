@@ -5,14 +5,17 @@
   "description": "ResLab — the lab notebook that keeps science honest. Design, pre-register, analyze, and verify research with a tamper-evident audit trail.",
   "license": "MIT",
   "workspaces": [
-    "packages/*"
+    "packages/*",
+    "web"
   ],
   "scripts": {
     "build": "npm run build -w @reslab/core",
     "test": "npm run test -w @reslab/core",
     "typecheck": "npm run typecheck -w @reslab/core",
+    "typecheck:web": "tsc -p web/tsconfig.json --noEmit",
     "demo": "npm run demo -w @reslab/core",
-    "report": "npm run report -w @reslab/core"
+    "report": "npm run report -w @reslab/core",
+    "site": "npm run build -w @reslab/web"
   },
   "engines": {
     "node": ">=20"

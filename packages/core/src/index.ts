@@ -13,5 +13,5 @@ export * from './prereg.js';
 export * from './special-functions.js';
 export * from './stats.js';
 export * from './verify.js';
-export * from './llm/featherless.js';
-export * from './llm/writeup.js';
+// NOTE: the LLM writer (llm/*) is Node-only (node:crypto, node:fs) and is
+// intentionally NOT exported from the barrel so the core stays browser-safe.
