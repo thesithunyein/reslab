@@ -4,14 +4,15 @@ on:
   push:
     branches: [main]
     paths: ['docs/**']
+  workflow_dispatch:
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    if: ${{ secrets.CLOUDFLARE_API_TOKEN != '' }}
     steps:
       - uses: actions/checkout@v4
       - name: Deploy to Cloudflare Pages
+        if: ${{ secrets.CLOUDFLARE_API_TOKEN != '' && secrets.CLOUDFLARE_ACCOUNT_ID != '' }}
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
