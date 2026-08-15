@@ -16,5 +16,6 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run typecheck
+      - run: npm run build -w @reslab/core   # web typecheck needs core's dist types
       - run: npm run typecheck:web
       - run: npm test
