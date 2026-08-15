@@ -17,11 +17,15 @@ function initDemo(): void {
   void demo.init();
 
   const btns = Array.from(document.querySelectorAll<HTMLButtonElement>('.step-btn[data-step]'));
-  btns.forEach((btn, i) => {
+  btns.forEach((btn) => {
     btn.addEventListener('click', () => {
-      void demo.runStep(i + 1);
-      btn.classList.remove('active');
-      btn.classList.add('done');
+      const step = Number(btn.dataset.step);
+      if (step >= 1 && step <= 5) {
+        void demo.runStep(step);
+        btn.classList.remove('active');
+        btn.classList.add('done');
+      }
+      // step 0 (Design) is auto-shown at init — it marks the starting position.
     });
   });
   document.getElementById('runAll')!.addEventListener('click', () => {
