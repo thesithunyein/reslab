@@ -23,6 +23,7 @@ export interface ProofOptions {
   auditEvents: readonly AuditEvent[];
   auditValid: boolean;
   alpha: number;
+  tails: 1 | 2;
 }
 
 const f4 = (x: number): string => (x !== 0 && Math.abs(x) < 1e-4 ? x.toExponential(3) : Number(x.toFixed(4)).toString());
@@ -71,6 +72,7 @@ export function buildProof(opts: ProofOptions, container: HTMLElement): void {
   wrap.appendChild(grid);
   wrap.appendChild(buildAudit(opts));
   wrap.appendChild(buildActions(opts));
+  wrap.appendChild(buildWriteup(opts));
   container.appendChild(wrap);
   container.classList.remove('hidden');
 }
@@ -319,5 +321,249 @@ function buildActions(opts: ProofOptions): HTMLElement {
     `data file sha-256 · ${opts.dataHash.slice(0, 24)}… · this exact file produced every number above`,
   );
   card.appendChild(hash);
+  return card;
+}
+
+// ---- study writeup (LLM-grounded, with an honest local fallback) ----
+
+interface WriteupPayload {
+  title: string;
+  hypothesis: string;
+  outcomeVariable: string;
+  groupName: string;
+  plannedTest: string;
+  method: string;
+  alpha: number;
+  tails: 1 | 2;
+  actualN: number[];
+  groups: Array<{ label: string; n: number; mean: number; sd: number }>;
+  statistic: number;
+  df?: number;
+  p: number;
+  effectSize?: number;
+  significant: boolean;
+  findings: Array<{ pattern: string; severity: string; message: string }>;
+}
+
+function buildWriteupPayload(opts: ProofOptions): WriteupPayload {
+  return {
+    title: `${opts.valueName} by ${opts.groupName}: a two-group comparison`,
+    hypothesis: `Compare ${opts.valueName} between the two groups in ${opts.groupName}.`,
+    outcomeVariable: opts.valueName,
+    groupName: opts.groupName,
+    plannedTest: opts.result.method,
+    method: opts.result.method,
+    alpha: opts.alpha,
+    tails: opts.tails,
+    actualN: opts.groups.map((g) => g.values.length),
+    groups: opts.groups.map((g) => {
+      const d = descriptive(g.values);
+      return { label: g.name, n: d.n, mean: d.mean, sd: d.sd };
+    }),
+    statistic: opts.result.statistic,
+    df: opts.result.df,
+    p: opts.result.p,
+    effectSize: opts.result.effectSize,
+    significant: opts.result.p < opts.alpha,
+    findings: [
+      {
+        pattern: 'exploratory analysis',
+        severity: 'info',
+        message:
+          'This analysis was run after data collection, without a pre-registered plan. Treat the result as hypothesis-generating, not confirmatory.',
+      },
+    ],
+  };
+}
+
+function sourceTable(v: WriteupPayload): string {
+  const fmt = (x?: number, digits = 4): string => {
+    if (x === undefined || x === null || Number.isNaN(x)) return 'n/a';
+    return x !== 0 && Math.abs(x) < 1e-4 ? x.toExponential(3) : String(Number(x.toFixed(digits)));
+  };
+  const rows: string[] = [
+    '## Computed statistics (source of truth)',
+    '',
+    '| Quantity | Value |',
+    '| --- | --- |',
+    `| Test | ${v.method} |`,
+    `| Sample sizes | ${v.actualN.join(', ')} |`,
+    `| Group means | ${v.groups.map((g) => `${g.label}: ${fmt(g.mean)}`).join(', ')} |`,
+    `| Statistic | ${fmt(v.statistic)} |`,
+    `| Degrees of freedom | ${v.df === undefined ? 'n/a' : fmt(v.df, 2)} |`,
+    `| p-value | ${fmt(v.p)} |`,
+    `| Effect size | ${v.effectSize === undefined ? 'n/a' : fmt(v.effectSize)} |`,
+    `| Significant at alpha=${v.alpha} | ${v.significant ? 'Yes' : 'No'} |`,
+    '',
+  ];
+  return rows.join('\n');
+}
+
+/** Deterministic fallback: the same structure, built locally from the verified numbers. */
+function localWriteup(v: WriteupPayload): string {
+  const fmt = (x?: number, digits = 4): string => {
+    if (x === undefined || x === null || Number.isNaN(x)) return 'n/a';
+    return x !== 0 && Math.abs(x) < 1e-4 ? x.toExponential(3) : String(Number(x.toFixed(digits)));
+  };
+  const [gA, gB] = v.groups;
+  const hi = gA!.mean >= gB!.mean ? gA! : gB!;
+  const lo = hi === gA ? gB! : gA!;
+  const direction = hi.mean !== lo.mean ? `${hi.label} averaged ${fmt(hi.mean, 1)} vs ${fmt(lo.mean, 1)} for ${lo.label}` : 'the two groups averaged the same';
+  const verdict = v.significant
+    ? `The difference was statistically significant (p = ${fmt(v.p)}), so chance is an unlikely explanation.`
+    : `The difference was not statistically significant (p = ${fmt(v.p)}); it could easily be luck.`;
+  return [
+    '## Methods',
+    '',
+    `${v.title}. The outcome variable was ${v.outcomeVariable}, compared across the two groups in ${v.groupName ?? 'the data'}. ${v.method} was used with alpha = ${v.alpha} and ${v.tails === 1 ? 'one' : 'two'}-sided testing.`,
+    '',
+    '## Results',
+    '',
+    `${direction}, a gap of ${fmt(Math.abs(gA!.mean - gB!.mean), 1)} points. ${verdict} Full details are in the computed statistics table below.`,
+    '',
+    '## Integrity notes',
+    '',
+    ...v.findings.map((f) => `- [${f.severity}] ${f.pattern}: ${f.message} (flagged for review)`),
+    '',
+    sourceTable(v),
+  ].join('\n');
+}
+
+/** Minimal safe markdown renderer: headings, lists, tables, bold, inline code. */
+function renderMarkdown(md: string, container: HTMLElement): void {
+  const lines = md.split(/\r?\n/);
+  const pushInline = (node: HTMLElement, text: string): void => {
+    for (const part of text.split(/(\*\*[^*]+\*\*|`[^`]+`)/g)) {
+      if (part.startsWith('**') && part.endsWith('**') && part.length > 4) {
+        const b = document.createElement('strong');
+        b.textContent = part.slice(2, -2);
+        node.appendChild(b);
+      } else if (part.startsWith('`') && part.endsWith('`') && part.length > 2) {
+        const c = document.createElement('code');
+        c.textContent = part.slice(1, -1);
+        node.appendChild(c);
+      } else if (part) {
+        node.appendChild(document.createTextNode(part));
+      }
+    }
+  };
+  let i = 0;
+  while (i < lines.length) {
+    const line = lines[i]!.trim();
+    if (!line || line === '---') {
+      i++;
+      continue;
+    }
+    if (line.startsWith('## ')) {
+      const h = document.createElement('h3');
+      h.className = 'w-h';
+      pushInline(h, line.slice(3));
+      container.appendChild(h);
+      i++;
+      continue;
+    }
+    if (line.startsWith('- ')) {
+      const ul = document.createElement('ul');
+      ul.className = 'w-list';
+      while (i < lines.length && lines[i]!.trim().startsWith('- ')) {
+        const li = document.createElement('li');
+        pushInline(li, lines[i]!.trim().slice(2));
+        ul.appendChild(li);
+        i++;
+      }
+      container.appendChild(ul);
+      continue;
+    }
+    if (line.startsWith('|')) {
+      const table = document.createElement('table');
+      table.className = 'proof-table w-table';
+      let firstRow = true;
+      while (i < lines.length && /^\s*\|/.test(lines[i]!)) {
+        const cells = lines[i]!.trim().replace(/^\|/, '').replace(/\|$/, '').split('|').map((c) => c.trim());
+        const isSep = cells.every((c) => /^:?-+:?$/.test(c));
+        if (!isSep) {
+          const tr = document.createElement('tr');
+          for (const cell of cells) {
+            const td = document.createElement(firstRow ? 'th' : 'td');
+            pushInline(td, cell);
+            tr.appendChild(td);
+          }
+          table.appendChild(tr);
+          firstRow = false;
+        }
+        i++;
+      }
+      if (table.childElementCount) container.appendChild(table);
+      continue;
+    }
+    const p = document.createElement('p');
+    p.className = 'w-p';
+    pushInline(p, line);
+    container.appendChild(p);
+    i++;
+  }
+}
+
+function buildWriteup(opts: ProofOptions): HTMLElement {
+  const card = el('div', 'proof-card');
+  const head = el('div', 'proof-head');
+  head.append(
+    headIco(
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>',
+    ),
+    el('span', '', 'Write up your study'),
+  );
+  card.appendChild(head);
+
+  const note = el(
+    'p',
+    'w-note',
+    'Turns these verified numbers into a Methods + Results + Integrity notes section you can paste into a paper or report. The AI only receives the numbers above; it cannot invent statistics.',
+  );
+  card.appendChild(note);
+
+  const btn = el('button', 'btn btn-primary sample-btn', 'Generate writeup');
+  const out = el('div', 'w-out');
+  out.classList.add('hidden');
+  card.append(btn, out);
+
+  btn.addEventListener('click', () => {
+    btn.disabled = true;
+    btn.textContent = 'Writing...';
+    out.classList.remove('hidden');
+    out.innerHTML = '';
+    const payload = buildWriteupPayload(opts);
+    const render = (md: string, label: string): void => {
+      const badge = el('div', 'w-badge', label);
+      out.appendChild(badge);
+      renderMarkdown(md, out);
+      btn.disabled = false;
+      btn.textContent = 'Regenerate writeup';
+      out.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    };
+    fetch('/writeup', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    })
+      .then(async (res) => {
+        const data = (await res.json().catch(() => null)) as { markdown?: string; error?: string } | null;
+        if (res.ok && data && data.markdown) {
+          render(data.markdown, 'Written by the ResLab writing engine');
+        } else {
+          const reason = data && data.error ? ` (${data.error})` : '';
+          render(
+            localWriteup(payload),
+            `The AI writing service is not connected yet${reason ? `: ${reason}` : ''}. This writeup was generated locally from the same verified numbers.`,
+          );
+        }
+      })
+      .catch(() => {
+        render(
+          localWriteup(payload),
+          'The AI writing service could not be reached. This writeup was generated locally from the same verified numbers.',
+        );
+      });
+  });
   return card;
 }

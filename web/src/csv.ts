@@ -250,6 +250,7 @@ export class CsvAnalyzer {
         auditEvents: audit.eventsSnapshot(),
         auditValid: chain.valid,
         alpha,
+        tails,
       },
       this.proof,
     );

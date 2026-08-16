@@ -3,7 +3,7 @@ name: Deploy site to Cloudflare Pages
 on:
   push:
     branches: [main]
-    paths: ['docs/**']
+    paths: ['docs/**', 'functions/**']
   workflow_dispatch:
 
 jobs:
