@@ -9,8 +9,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
-  <script type="module" crossorigin src="./assets/index-DWPhRUwB.js"></script>
-  <link rel="stylesheet" crossorigin href="./assets/index-oeAFvRfW.css">
+  <script type="module" crossorigin src="./assets/index-DtBNFeYX.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-DNem1UpI.css">
 </head>
 <body>
   <nav>
@@ -100,37 +100,34 @@
     <div class="wrap">
       <div class="kicker">Pre-registration workspace</div>
       <h2>Lock your plan <em class="grad">before you see the data</em></h2>
-      <p class="lead">Design a study, seal it with a SHA-256 checksum, analyze with the pre-registered test, and let the integrity detectors check the result. Every action lands on a tamper-evident audit trail.</p>
+      <p class="lead">One click runs the whole honest workflow: design, lock, analyze, detect, prove. Every number is computed and verified in your browser.</p>
       <div class="study-card reveal">
-        <div class="study-win">
-          <div class="study-side" id="studySteps">
-            <div class="study-side-title">Study flow</div>
-            <button class="s-step active" data-s="0"><span class="s-idx">1</span>Design</button>
-            <button class="s-step" data-s="1"><span class="s-idx">2</span>Pre-register</button>
-            <button class="s-step" data-s="2"><span class="s-idx">3</span>Analyze</button>
-            <button class="s-step" data-s="3"><span class="s-idx">4</span>Detect</button>
-            <button class="s-step" data-s="4"><span class="s-idx">5</span>Prove</button>
-            <button class="btn btn-primary study-run" id="studyRunAll">Run full flow <span class="arr">→</span></button>
-          </div>
-          <div class="study-main">
-            <div class="study-output" id="studyOutput"></div>
-            <div class="study-summary hidden" id="studySummary">
-              <div class="ss-head"><span class="ss-check">✓</span> Verified confirmatory result</div>
-              <div class="hs-grid">
-                <div class="hs-cell"><div class="hs-num" id="stT">···</div><div class="hs-lab">t</div></div>
-                <div class="hs-cell"><div class="hs-num" id="stDf">···</div><div class="hs-lab">df</div></div>
-                <div class="hs-cell"><div class="hs-num" id="stP">···</div><div class="hs-lab">p</div></div>
-                <div class="hs-cell"><div class="hs-num" id="stD">···</div><div class="hs-lab">Cohen's d</div></div>
-              </div>
-              <div class="hs-chips">
-                <span class="chip ok">hard verification passed</span>
-                <span class="chip warn">guardian: optional stopping</span>
-                <span class="chip dim">audit chain intact</span>
-              </div>
-            </div>
-          </div>
+        <div class="study-strip" id="studyStrip">
+          <div class="s-step" data-s="0"><span class="s-check">✓</span><span class="s-ico">📝</span><span class="s-lab">Design</span></div>
+          <div class="s-step" data-s="1"><span class="s-check">✓</span><span class="s-ico">🔒</span><span class="s-lab">Pre-register</span></div>
+          <div class="s-step" data-s="2"><span class="s-check">✓</span><span class="s-ico">📊</span><span class="s-lab">Analyze</span></div>
+          <div class="s-step" data-s="3"><span class="s-check">✓</span><span class="s-ico">🛡️</span><span class="s-lab">Detect</span></div>
+          <div class="s-step" data-s="4"><span class="s-check">✓</span><span class="s-ico">✅</span><span class="s-lab">Prove</span></div>
         </div>
-        <div class="study-status" id="studyStatus">ready. pick a step to run the flow.</div>
+        <div class="study-cta">
+          <button class="btn btn-primary study-run" id="studyRunAll">Run the flow <span class="arr">→</span></button>
+          <div class="study-status" id="studyStatus"></div>
+        </div>
+        <div class="study-result hidden" id="studyResult">
+          <div class="sr-head"><span class="sr-check">✓</span> Verified result</div>
+          <div class="hs-grid">
+            <div class="hs-cell"><div class="hs-num" id="stT">···</div><div class="hs-lab">t</div></div>
+            <div class="hs-cell"><div class="hs-num" id="stDf">···</div><div class="hs-lab">df</div></div>
+            <div class="hs-cell"><div class="hs-num" id="stP">···</div><div class="hs-lab">p</div></div>
+            <div class="hs-cell"><div class="hs-num" id="stD">···</div><div class="hs-lab">Cohen's d</div></div>
+          </div>
+          <div class="hs-chips">
+            <span class="chip ok">hard verification passed</span>
+            <span class="chip warn">guardian: optional stopping</span>
+            <span class="chip dim">audit chain intact · <span id="stEvents">0</span> events</span>
+          </div>
+          <div class="sr-recipe" id="stRecipe"></div>
+        </div>
       </div>
     </div>
   </section>

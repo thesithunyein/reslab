@@ -23,13 +23,13 @@ function initReveal(): void {
 }
 
 function initStudy(): void {
-  const output = document.getElementById('studyOutput') as HTMLElement;
+  const steps = document.querySelectorAll<HTMLElement>('#studyStrip .s-step');
   const status = document.getElementById('studyStatus') as HTMLElement;
-  const steps = document.querySelectorAll<HTMLButtonElement>('#studySteps .s-step');
-  const summary = document.getElementById('studySummary') as HTMLElement;
-  const flow = new StudyFlow(output, status, steps, summary);
+  const runBtn = document.getElementById('studyRunAll') as HTMLButtonElement;
+  const result = document.getElementById('studyResult') as HTMLElement;
+  const flow = new StudyFlow(steps, status, runBtn, result);
   void flow.init();
-  document.getElementById('studyRunAll')!.addEventListener('click', () => void flow.runAll());
+  runBtn.addEventListener('click', () => void flow.runAll());
 }
 
 function initFaq(): void {
