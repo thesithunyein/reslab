@@ -34,12 +34,7 @@
         <p class="sub">Design a study. Pre-register it. Analyze with verified statistics on a tamper-evident audit trail.</p>
         <div class="cta-row">
           <a class="btn btn-primary" href="#analyze">Analyze your CSV <span class="arr">→</span></a>
-          <a class="btn btn-ghost" href="https://github.com/thesithunyein/reslab" target="_blank" rel="noopener">View source</a>
-        </div>
-        <div class="badges">
-          <span class="badge"><span class="b-dot ok"></span>78 tests passing</span>
-          <span class="badge"><span class="b-dot ok"></span>validated vs. scipy / R</span>
-          <span class="badge"><span class="b-dot ok"></span>your data never leaves</span>
+          <button class="btn btn-ghost" id="howBtn" type="button">How it works</button>
         </div>
       </div>
 
@@ -58,6 +53,40 @@
       <div class="stat"><div class="stat-num">8+</div><div class="stat-lab">statistical methods, hard-verified</div></div>
       <div class="stat"><div class="stat-num">SHA-256</div><div class="stat-lab">hash-chained audit log</div></div>
       <div class="stat"><div class="stat-num">100%</div><div class="stat-lab">in-browser, data never leaves</div></div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS / FAQ -->
+  <section id="faq" class="hidden">
+    <div class="wrap">
+      <div class="kicker">How it works</div>
+      <h2>The honest path, <em class="grad">step by step</em></h2>
+      <div class="faq-list">
+        <details class="faq-item" open>
+          <summary>What does ResLab do?</summary>
+          <p>ResLab is a lab notebook for research that wants to stay honest. You design a study, seal the plan with a SHA-256 checksum before you see the data, run verified statistics, and keep every action on a tamper-evident audit trail.</p>
+        </details>
+        <details class="faq-item">
+          <summary>Why pre-register?</summary>
+          <p>When the plan is locked before data collection, a result that is not significant is still a result. The checksum binds the plan, and the integrity detectors catch you if the analysis drifts from it.</p>
+        </details>
+        <details class="faq-item">
+          <summary>What tests are included?</summary>
+          <p>Welch and Student t-tests, one-way ANOVA, Mann-Whitney U, and correlation. The engine checks normality and variance assumptions first and picks the test the data actually supports.</p>
+        </details>
+        <details class="faq-item">
+          <summary>Where does my data go?</summary>
+          <p>Nowhere. Analysis runs entirely in your browser, on your machine. Your CSV never leaves it.</p>
+        </details>
+        <details class="faq-item">
+          <summary>What is the audit trail?</summary>
+          <p>Every action is appended to a hash chain. Each entry stores the hash of the entry before it, so a silent edit breaks the chain and verification fails visibly.</p>
+        </details>
+        <details class="faq-item">
+          <summary>How do I start?</summary>
+          <p>Drop a CSV into the analyzer to get a verified result in seconds, or open the pre-registration workspace to lock a plan first.</p>
+        </details>
+      </div>
     </div>
   </section>
 
@@ -173,7 +202,6 @@
       <img src="./assets/logo.png" alt="ResLab" width="40" />
       <p class="f-brand"><strong>ResLab</strong>. Every number is computed, verified, and reproducible.</p>
       <p class="f-links"><a href="https://github.com/thesithunyein/reslab" target="_blank" rel="noopener">github.com/thesithunyein/reslab</a> · reslab.sithunyein.com</p>
-      <div class="f-flow">design → pre-register → analyze → verify → detect</div>
     </div>
   </footer>
 
