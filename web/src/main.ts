@@ -44,6 +44,7 @@ function initCsv(): void {
     el('runCsv') as HTMLButtonElement,
     el('csvStatus') as HTMLElement,
     el('csvResult') as HTMLElement,
+    el('csvProof') as HTMLElement,
     el('sampleBtn') as HTMLButtonElement,
     el('downloadBtn') as HTMLButtonElement,
     el('advToggle') as HTMLButtonElement,

@@ -5,6 +5,7 @@ import {
   newRegistry,
   recommendTwoGroupTest,
   ResearchSession,
+  sha256Hex,
   twoSampleT,
   verifyResult,
   type DescriptiveStats,
@@ -13,6 +14,7 @@ import {
   type VerificationReport,
 } from '@reslab/core';
 import { parseCsv } from './csv-parser';
+import { buildProof } from './proof';
 
 const f4 = (x: number): string => (x !== 0 && Math.abs(x) < 1e-4 ? x.toExponential(3) : Number(x.toFixed(4)).toString());
 
@@ -44,6 +46,8 @@ function sampleCsv(): string {
 export class CsvAnalyzer {
   private rows: string[][] = [];
   private headers: string[] = [];
+  private rawText = '';
+  private fileName = 'sample-study.csv';
 
   constructor(
     private dropzone: HTMLElement,
@@ -55,6 +59,7 @@ export class CsvAnalyzer {
     private runBtn: HTMLButtonElement,
     private status: HTMLElement,
     private result: HTMLElement,
+    private proof: HTMLElement,
     sampleBtn: HTMLButtonElement,
     private downloadBtn: HTMLButtonElement,
     private advToggle: HTMLButtonElement,
@@ -109,6 +114,9 @@ export class CsvAnalyzer {
 
   private async load(file: File, autoRun: boolean): Promise<void> {
     const text = await file.text();
+    this.rawText = text;
+    this.fileName = file.name;
+    this.proof.classList.add('hidden');
     const rows = parseCsv(text);
     if (rows.length < 2) {
       this.status.textContent = 'Could not parse the file. Expected a CSV with a header row.';
@@ -215,6 +223,8 @@ export class CsvAnalyzer {
 
     const audit = new AuditLog();
     const session = new ResearchSession(audit, newRegistry());
+    const dataHash = await sha256Hex(this.rawText);
+    await session.recordDataVersion('v1.0.0', `data file ${this.fileName}`);
     await session.runAnalysis({
       lane: 'exploratory',
       test: result.test,
@@ -224,6 +234,25 @@ export class CsvAnalyzer {
     const chain = await audit.verify();
 
     this.render(result, verification, chain.valid, audit.length, rec, alpha, da, db, gA, gB);
+    buildProof(
+      {
+        fileName: this.fileName,
+        rawText: this.rawText,
+        dataHash,
+        groupName,
+        valueName,
+        groups: [
+          { name: gA, values: a },
+          { name: gB, values: b },
+        ],
+        result,
+        verification,
+        auditEvents: audit.eventsSnapshot(),
+        auditValid: chain.valid,
+        alpha,
+      },
+      this.proof,
+    );
   }
 
   private render(
