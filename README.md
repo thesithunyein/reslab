@@ -71,7 +71,7 @@ ResLab is the opposite. It treats research integrity as **infrastructure**:
    the report are downloadable so anyone can re-run the math themselves.
 
 On the live site, **"Pre-registration workspace"** runs this whole flow in one
-click — the engine executes it for real in your browser.
+click: the engine executes it for real in your browser.
 
 ## What's computed vs. what's generated
 
@@ -81,7 +81,7 @@ click — the engine executes it for real in your browser.
 | Pre-registration checksum | **SHA-256** over the canonical design |
 | Audit chain | **SHA-256** hash-chained events |
 | Integrity findings | **Deterministic rule engine** over the audit log + runs |
-| Written claims (Methods/Results) | **Grounded in the actual computed numbers** — an LLM writes prose, it never computes |
+| Written claims (Methods/Results) | **Grounded in the actual computed numbers**: an LLM writes prose, it never computes |
 
 No LLM computes a number. No number enters the record unverified.
 
@@ -157,7 +157,7 @@ reslab/
 The product site lives at **reslab.sithunyein.com** (production, HTTPS, hosted
 on Vercel). Try the one-click sample dataset: you get a plain-English verdict,
 the numbers behind it, the proof layer (interactive graph, structured report,
-raw-data downloads, audit chain), and a grounded AI writeup — all from the real
+raw-data downloads, audit chain), and a grounded AI writeup: all from the real
 engine running in your browser.
 
 ## Quick start
@@ -198,7 +198,7 @@ The demo (`npm run demo`) runs the full flow on deterministic seeded data:
 - **Your data never leaves your machine.** Statistics run entirely in the
   browser. There is no upload, no server-side storage, no tracking.
 - **The AI writeup sees summary numbers only.** The writeup call transmits
-  computed statistics (means, SDs, n, t, df, p, effect size) — never the raw
+  computed statistics (means, SDs, n, t, df, p, effect size): never the raw
   data file and never individual observations.
 - **Server-side key, validated inputs.** The `FEATHERLESS_API_KEY` lives only
   in the Vercel environment. The function validates every field (finite
@@ -206,7 +206,7 @@ The demo (`npm run demo`) runs the full flow on deterministic seeded data:
   reaches the LLM, and the client is sandboxed to a strict grounded prompt.
 - **Tamper-evidence by construction.** Pre-registration locks and the audit
   chain use SHA-256 hashes, so an undetected change is cryptographically
-  infeasible — and any detected change breaks a visible chain.
+  infeasible, and any detected change breaks a visible chain.
 - **No number is trusted at face value.** Every result passes hard code
   assertions (finite, in-range, correct df, valid n) before it can be recorded.
 
@@ -240,7 +240,7 @@ approximation, Lanczos ln Γ, continued-fraction incomplete beta).
 - **Guardian framing.** Detection is "for review," never forbidden. That is
   both the ethically correct design and the one that survives false positives.
 - **Proof is attached to claims.** Every result ships with its raw data,
-  its SHA-256 hash, and its audit chain — a summary without its receipt is
+  its SHA-256 hash, and its audit chain: a summary without its receipt is
   just a claim.
 
 ## Roadmap
