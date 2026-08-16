@@ -218,6 +218,39 @@ h1 em { font-style: normal; background: var(--grad); -webkit-background-clip: te
 .chip.err { color: var(--err); border-color: rgba(224, 82, 82, 0.4); background: rgba(224, 82, 82, 0.08); }
 .hidden { display: none !important; }
 
+/* how it works / faq */
+#faq { text-align: center; }
+#faq h2 { margin-left: auto; margin-right: auto; }
+.faq-list { display: grid; gap: 12px; max-width: 760px; margin: 0 auto; text-align: left; }
+.faq-item {
+  background: var(--panel); border: 1px solid var(--line); border-radius: 16px;
+  box-shadow: var(--shadow-sm); overflow: hidden;
+}
+.faq-item summary {
+  list-style: none; cursor: pointer;
+  display: flex; align-items: center; gap: 14px;
+  padding: 16px 20px; font-weight: 600; font-size: 15px; color: var(--text);
+  transition: color 0.15s;
+}
+.faq-item summary::-webkit-details-marker { display: none; }
+.faq-item summary::marker { content: ""; }
+.faq-item summary:hover { color: var(--accent); }
+.faq-q { flex: 1; }
+.faq-ico {
+  width: 32px; height: 32px; border-radius: 10px; flex: 0 0 32px;
+  background: #1d2b1b; color: #fff;
+  display: inline-flex; align-items: center; justify-content: center;
+}
+.faq-ico svg { width: 17px; height: 17px; }
+.faq-item summary::after {
+  content: ""; width: 8px; height: 8px; flex: 0 0 8px;
+  border-right: 2px solid var(--faint); border-bottom: 2px solid var(--faint);
+  transform: rotate(45deg); transition: transform 0.2s, border-color 0.2s;
+}
+.faq-item[open] summary::after { transform: rotate(-135deg); border-color: var(--accent); }
+.faq-item p { padding: 0 20px 18px 66px; font-size: 14px; color: var(--muted); max-width: 640px; }
+.faq-item[open] p { animation: rise 0.25s ease both; }
+
 /* stats strip */
 .stats-strip { padding: 0; border: none; }
 .stats-grid {
@@ -320,9 +353,6 @@ footer { padding: 48px 0 56px; text-align: center; border-top: 1px solid var(--l
 .f-logo { display: inline-block; }
 .f-logo img { opacity: 0.95; }
 .f-tag { margin-top: 12px; font-size: 14px; color: var(--muted); }
-.f-links { margin-top: 8px; font-size: 13px; font-family: var(--mono); color: var(--faint); }
-.f-links a { color: var(--text); text-decoration: none; }
-.f-links a:hover { color: var(--accent); }
 
 @media (max-width: 960px) {
   .hero-inner { grid-template-columns: 1fr; gap: 40px; }
