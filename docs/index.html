@@ -9,8 +9,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
-  <script type="module" crossorigin src="./assets/index-Bupb56JW.js"></script>
-  <link rel="stylesheet" crossorigin href="./assets/index-QaAbf0wP.css">
+  <script type="module" crossorigin src="./assets/index-ByWMPmLR.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-cFsYBPnc.css">
 </head>
 <body>
   <nav>
@@ -36,7 +36,7 @@
         <p class="sub">Design a study. Pre-register it. Analyze with verified statistics on a tamper-evident audit trail.</p>
         <div class="cta-row">
           <a class="btn btn-primary" href="#analyze">Analyze your CSV <span class="arr">→</span></a>
-          <button class="btn btn-ghost" id="howBtn" type="button">How it works</button>
+          <a class="btn btn-ghost" href="#faq">How it works</a>
         </div>
       </div>
 
@@ -105,11 +105,11 @@
       <p class="lead">One click runs the whole honest workflow: design, lock, analyze, detect, prove. Every number is computed and verified in your browser.</p>
       <div class="study-card reveal">
         <div class="study-strip" id="studyStrip">
-          <div class="s-step" data-s="0"><span class="s-check">✓</span><span class="s-ico">📝</span><span class="s-lab">Design</span></div>
-          <div class="s-step" data-s="1"><span class="s-check">✓</span><span class="s-ico">🔒</span><span class="s-lab">Pre-register</span></div>
-          <div class="s-step" data-s="2"><span class="s-check">✓</span><span class="s-ico">📊</span><span class="s-lab">Analyze</span></div>
-          <div class="s-step" data-s="3"><span class="s-check">✓</span><span class="s-ico">🛡️</span><span class="s-lab">Detect</span></div>
-          <div class="s-step" data-s="4"><span class="s-check">✓</span><span class="s-ico">✅</span><span class="s-lab">Prove</span></div>
+          <div class="s-step" data-s="0"><span class="s-check">✓</span><span class="s-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20l1.5-4.5L16.5 4.5a2.1 2.1 0 0 1 3 3L8.5 18.5 4 20z"/><path d="M13.5 6.5l4 4"/></svg></span><span class="s-lab">Design</span></div>
+          <div class="s-step" data-s="1"><span class="s-check">✓</span><span class="s-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span><span class="s-lab">Pre-register</span></div>
+          <div class="s-step" data-s="2"><span class="s-check">✓</span><span class="s-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 20v-6"/><path d="M12 20V8"/><path d="M19 20v-9"/><path d="M3 20h18"/></svg></span><span class="s-lab">Analyze</span></div>
+          <div class="s-step" data-s="3"><span class="s-check">✓</span><span class="s-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4.6-3 7.6-7 9-4-1.4-7-4.4-7-9V6l7-3z"/><path d="M9 12l2 2 4-4"/></svg></span><span class="s-lab">Detect</span></div>
+          <div class="s-step" data-s="4"><span class="s-check">✓</span><span class="s-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6.5"/></svg></span><span class="s-lab">Prove</span></div>
         </div>
         <div class="study-cta">
           <button class="btn btn-primary study-run" id="studyRunAll">Run the flow <span class="arr">→</span></button>
@@ -141,9 +141,9 @@
       <h2>Validated against <em class="grad">known values</em></h2>
       <p class="lead">Every result is checked against published references and recorded on a tamper-evident trail. No vibes, no black boxes.</p>
       <div class="verify-cards reveal">
-        <div class="verify-check"><div class="vc-ico">✓</div><div><strong>Verified against R and scipy</strong><p>t, F, χ² and U values cross-checked to known published numbers.</p></div></div>
-        <div class="verify-check"><div class="vc-ico">🔗</div><div><strong>Tamper-evident audit</strong><p>Every action lands on a SHA-256 hash chain. One silent edit breaks it, visibly.</p></div></div>
-        <div class="verify-check"><div class="vc-ico">🧪</div><div><strong>78 tests, green in CI</strong><p>Every commit runs the full suite against those reference values.</p></div></div>
+        <div class="verify-check"><div class="vc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6.5"/></svg></div><div><strong>Verified against R and scipy</strong><p>t, F, χ² and U values cross-checked to known published numbers.</p></div></div>
+        <div class="verify-check"><div class="vc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></div><div><strong>Tamper-evident audit</strong><p>Every action lands on a SHA-256 hash chain. One silent edit breaks it, visibly.</p></div></div>
+        <div class="verify-check"><div class="vc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 3v6L4.5 18.5A2 2 0 0 0 6.3 22h11.4a2 2 0 0 0 1.8-3.5L14 9V3"/><path d="M8 3h8"/><path d="M7.5 15h9"/></svg></div><div><strong>78 tests, green in CI</strong><p>Every commit runs the full suite against those reference values.</p></div></div>
       </div>
       <div class="media-frame wide reveal">
         <video class="media-video" src="./assets/section-dashboard.mp4" poster="./assets/section-dashboard-poster.jpg" autoplay muted loop playsinline></video>
@@ -152,7 +152,7 @@
   </section>
 
   <!-- HOW IT WORKS / FAQ -->
-  <section id="faq" class="hidden">
+  <section id="faq">
     <div class="wrap">
       <div class="kicker">How it works</div>
       <h2>The honest path, <em class="grad">step by step</em></h2>
@@ -184,6 +184,14 @@
       </div>
     </div>
   </section>
+
+  <footer>
+    <div class="wrap">
+      <a class="f-logo" href="#top"><img src="./assets/logo.png" alt="ResLab" width="30" /></a>
+      <p class="f-tag">Every number is computed, verified, and reproducible.</p>
+      <p class="f-links"><a href="https://github.com/thesithunyein/reslab" target="_blank" rel="noopener">github.com/thesithunyein/reslab</a> · reslab.sithunyein.com</p>
+    </div>
+  </footer>
 
 </body>
 </html>

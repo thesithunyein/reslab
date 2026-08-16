@@ -1,13 +1,11 @@
 import {
   AuditLog,
-  descriptive,
   mannWhitney,
   newRegistry,
   recommendTwoGroupTest,
   ResearchSession,
   twoSampleT,
   verifyResult,
-  type DescriptiveStats,
   type TestRecommendation,
   type TestResult,
   type VerificationReport,
@@ -202,8 +200,6 @@ export class CsvAnalyzer {
   private async analyze(a: number[], b: number[], gA: string, gB: string, valueName: string, groupName: string): Promise<void> {
     const alpha = Number(this.alphaSel.value);
     const tails = Number(this.tailsSel.value) as 1 | 2;
-    const da = descriptive(a);
-    const db = descriptive(b);
     const rec = recommendTwoGroupTest(a, b);
     const result: TestResult =
       rec.recommended === 'two_sample_t'
@@ -223,7 +219,7 @@ export class CsvAnalyzer {
     });
     const chain = await audit.verify();
 
-    this.render(result, verification, chain.valid, audit.length, da, db, rec, gA, gB, alpha);
+    this.render(result, verification, chain.valid, audit.length, rec, alpha);
   }
 
   private render(
@@ -231,11 +227,7 @@ export class CsvAnalyzer {
     verification: VerificationReport,
     chainValid: boolean,
     events: number,
-    da: DescriptiveStats,
-    db: DescriptiveStats,
     rec: TestRecommendation,
-    gA: string,
-    gB: string,
     alpha: number,
   ): void {
     this.result.innerHTML = '';
@@ -274,7 +266,12 @@ export class CsvAnalyzer {
 
     const why = document.createElement('div');
     why.className = 'sr-why';
-    why.textContent = `${r.method}. ${rec.explanation}`;
+    const whyText: Record<string, string> = {
+      two_sample_t: 'Both groups look normal with similar spreads, so the engine used the pooled t-test.',
+      welch_t: "The groups differ in spread, so the engine used Welch's t-test, which handles unequal variance.",
+      mann_whitney: 'The data is not normally shaped, so the engine used the rank-based Mann-Whitney test.',
+    };
+    why.textContent = whyText[rec.recommended] ?? rec.explanation;
     card.appendChild(why);
 
     const chips = document.createElement('div');
@@ -291,16 +288,6 @@ export class CsvAnalyzer {
     aud.textContent = chainValid ? `audit chain intact · ${events} event${events === 1 ? '' : 's'}` : 'audit chain broken';
     chips.append(sig, ver, aud);
     card.appendChild(chips);
-
-    const meta = document.createElement('div');
-    meta.className = 'sr-meta';
-    meta.textContent = `${gA}: n=${da.n} mean=${f4(da.mean)}  ·  ${gB}: n=${db.n} mean=${f4(db.mean)}`;
-    card.appendChild(meta);
-
-    const note = document.createElement('div');
-    note.className = 'sr-note';
-    note.textContent = 'Exploratory analysis: it generates hypotheses, never conclusions.';
-    card.appendChild(note);
 
     this.result.appendChild(card);
     this.result.classList.remove('hidden');

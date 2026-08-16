@@ -32,21 +32,6 @@ function initStudy(): void {
   runBtn.addEventListener('click', () => void flow.runAll());
 }
 
-function initFaq(): void {
-  const btn = document.getElementById('howBtn') as HTMLButtonElement;
-  const faq = document.getElementById('faq') as HTMLElement;
-  btn.addEventListener('click', () => {
-    const closing = !faq.classList.contains('hidden');
-    faq.classList.toggle('hidden', closing);
-    btn.textContent = closing ? 'How it works' : 'Close';
-    if (!closing) {
-      requestAnimationFrame(() => {
-        faq.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      });
-    }
-  });
-}
-
 function initCsv(): void {
   const el = (id: string): HTMLElement => document.getElementById(id)!;
   new CsvAnalyzer(
@@ -69,6 +54,5 @@ function initCsv(): void {
 }
 
 initReveal();
-initFaq();
 initStudy();
 initCsv();
