@@ -15,8 +15,8 @@
     <div class="wrap nav-inner">
       <a class="brand" href="#top"><img src="./assets/logo.png" alt="ResLab" /><span>ResLab</span></a>
       <div class="nav-links">
-        <a href="#study">Pre-register</a>
         <a href="#analyze">Analyze</a>
+        <a href="#study">Pre-register</a>
         <a href="#verify">Verification</a>
         <a class="nav-cta" href="https://github.com/thesithunyein/reslab" target="_blank" rel="noopener">GitHub ↗</a>
       </div>
@@ -56,36 +56,39 @@
     </div>
   </section>
 
-  <!-- HOW IT WORKS / FAQ -->
-  <section id="faq" class="hidden">
+  <!-- CSV ANALYZER -->
+  <section id="analyze">
     <div class="wrap">
-      <div class="kicker">How it works</div>
-      <h2>The honest path, <em class="grad">step by step</em></h2>
-      <div class="faq-list">
-        <details class="faq-item" open>
-          <summary>What does ResLab do?</summary>
-          <p>ResLab is a lab notebook for research that wants to stay honest. You design a study, seal the plan with a SHA-256 checksum before you see the data, run verified statistics, and keep every action on a tamper-evident audit trail.</p>
-        </details>
-        <details class="faq-item">
-          <summary>Why pre-register?</summary>
-          <p>When the plan is locked before data collection, a result that is not significant is still a result. The checksum binds the plan, and the integrity detectors catch you if the analysis drifts from it.</p>
-        </details>
-        <details class="faq-item">
-          <summary>What tests are included?</summary>
-          <p>Welch and Student t-tests, one-way ANOVA, Mann-Whitney U, and correlation. The engine checks normality and variance assumptions first and picks the test the data actually supports.</p>
-        </details>
-        <details class="faq-item">
-          <summary>Where does my data go?</summary>
-          <p>Nowhere. Analysis runs entirely in your browser, on your machine. Your CSV never leaves it.</p>
-        </details>
-        <details class="faq-item">
-          <summary>What is the audit trail?</summary>
-          <p>Every action is appended to a hash chain. Each entry stores the hash of the entry before it, so a silent edit breaks the chain and verification fails visibly.</p>
-        </details>
-        <details class="faq-item">
-          <summary>How do I start?</summary>
-          <p>Drop a CSV into the analyzer to get a verified result in seconds, or open the pre-registration workspace to lock a plan first.</p>
-        </details>
+      <div class="kicker">Analyze your data</div>
+      <h2>Drop a CSV. <em class="grad">Get the honest result.</em></h2>
+      <p class="lead">ResLab picks the right two-group test from your data's own assumptions and records everything on an audit trail.</p>
+      <div class="csv-card reveal">
+        <div class="dropzone" id="dropzone">
+          <input type="file" id="fileInput" accept=".csv,.tsv,text/csv,text/plain" hidden />
+          <div class="dz-inner">
+            <div class="dz-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 16V4M7 9l5-5 5 5"/><path d="M4 15v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg>
+            </div>
+            <p><strong>Drop a CSV here</strong> or <span class="link" id="browseLink">browse</span></p>
+            <p class="dz-hint">Two numeric columns → mean comparison · any table for group tests</p>
+            <button class="btn btn-ghost sample-btn" id="sampleBtn">or try the sample dataset →</button>
+          </div>
+        </div>
+        <div id="csvControls" class="csv-controls" hidden>
+          <label>Value column <select id="valueCol"></select></label>
+          <label>Group column <select id="groupCol"></select></label>
+          <button class="btn btn-primary" id="runCsv">Run two-group analysis <span class="arr">→</span></button>
+        </div>
+        <div class="csv-status" id="csvStatus"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRODUCT SHOWCASE -->
+  <section class="showcase">
+    <div class="wrap">
+      <div class="media-frame wide reveal">
+        <video class="media-video" src="./assets/section-features.mp4" poster="./assets/section-features-poster.jpg" autoplay muted loop playsinline></video>
       </div>
     </div>
   </section>
@@ -130,43 +133,6 @@
     </div>
   </section>
 
-  <!-- CSV ANALYZER -->
-  <section id="analyze">
-    <div class="wrap">
-      <div class="kicker">Analyze your data</div>
-      <h2>Drop a CSV. <em class="grad">Get the honest result.</em></h2>
-      <p class="lead">ResLab picks the right two-group test from your data's own assumptions and records everything on an audit trail.</p>
-      <div class="csv-card reveal">
-        <div class="dropzone" id="dropzone">
-          <input type="file" id="fileInput" accept=".csv,.tsv,text/csv,text/plain" hidden />
-          <div class="dz-inner">
-            <div class="dz-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 16V4M7 9l5-5 5 5"/><path d="M4 15v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg>
-            </div>
-            <p><strong>Drop a CSV here</strong> or <span class="link" id="browseLink">browse</span></p>
-            <p class="dz-hint">Two numeric columns → mean comparison · any table for group tests</p>
-            <button class="btn btn-ghost sample-btn" id="sampleBtn">or try the sample dataset →</button>
-          </div>
-        </div>
-        <div id="csvControls" class="csv-controls" hidden>
-          <label>Value column <select id="valueCol"></select></label>
-          <label>Group column <select id="groupCol"></select></label>
-          <button class="btn btn-primary" id="runCsv">Run two-group analysis <span class="arr">→</span></button>
-        </div>
-        <div class="csv-status" id="csvStatus"></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- PRODUCT SHOWCASE -->
-  <section class="showcase">
-    <div class="wrap">
-      <div class="media-frame wide reveal">
-        <video class="media-video" src="./assets/section-features.mp4" poster="./assets/section-features-poster.jpg" autoplay muted loop playsinline></video>
-      </div>
-    </div>
-  </section>
-
   <!-- VERIFICATION -->
   <section id="verify">
     <div class="wrap">
@@ -193,6 +159,40 @@
       </div>
       <div class="media-frame wide reveal">
         <video class="media-video" src="./assets/section-dashboard.mp4" poster="./assets/section-dashboard-poster.jpg" autoplay muted loop playsinline></video>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS / FAQ -->
+  <section id="faq" class="hidden">
+    <div class="wrap">
+      <div class="kicker">How it works</div>
+      <h2>The honest path, <em class="grad">step by step</em></h2>
+      <div class="faq-list">
+        <details class="faq-item" open>
+          <summary>What does ResLab do?</summary>
+          <p>ResLab is a lab notebook for research that wants to stay honest. You design a study, seal the plan with a SHA-256 checksum before you see the data, run verified statistics, and keep every action on a tamper-evident audit trail.</p>
+        </details>
+        <details class="faq-item">
+          <summary>Why pre-register?</summary>
+          <p>When the plan is locked before data collection, a result that is not significant is still a result. The checksum binds the plan, and the integrity detectors catch you if the analysis drifts from it.</p>
+        </details>
+        <details class="faq-item">
+          <summary>What tests are included?</summary>
+          <p>Welch and Student t-tests, one-way ANOVA, Mann-Whitney U, and correlation. The engine checks normality and variance assumptions first and picks the test the data actually supports.</p>
+        </details>
+        <details class="faq-item">
+          <summary>Where does my data go?</summary>
+          <p>Nowhere. Analysis runs entirely in your browser, on your machine. Your CSV never leaves it.</p>
+        </details>
+        <details class="faq-item">
+          <summary>What is the audit trail?</summary>
+          <p>Every action is appended to a hash chain. Each entry stores the hash of the entry before it, so a silent edit breaks the chain and verification fails visibly.</p>
+        </details>
+        <details class="faq-item">
+          <summary>How do I start?</summary>
+          <p>Drop a CSV into the analyzer to get a verified result in seconds, or open the pre-registration workspace to lock a plan first.</p>
+        </details>
       </div>
     </div>
   </section>

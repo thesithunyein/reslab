@@ -40,6 +40,9 @@ body {
 }
 .wrap { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
 a { color: inherit; }
+a:focus-visible, button:focus-visible, summary:focus-visible, select:focus-visible {
+  outline: 2px solid var(--accent); outline-offset: 2px;
+}
 em.grad { font-style: normal; background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
 ::selection { background: var(--accent-soft); }
 
@@ -218,7 +221,7 @@ h1 em { font-style: normal; background: var(--grad); -webkit-background-clip: te
 .hidden { display: none !important; }
 
 /* how it works / faq */
-.faq-list { display: grid; gap: 12px; max-width: 780px; }
+.faq-list { display: grid; gap: 12px; max-width: 780px; margin: 0 auto; }
 .faq-item {
   background: var(--panel); border: 1px solid var(--line); border-radius: 14px;
   box-shadow: var(--shadow-sm); overflow: hidden;
@@ -262,6 +265,13 @@ h1 em { font-style: normal; background: var(--grad); -webkit-background-clip: te
 
 /* sections */
 section { padding: 88px 0; scroll-margin-top: 64px; }
+.showcase { padding: 0 0 12px; }
+.stat, .v-item, .verify-card, .faq-item {
+  transition: transform 0.22s ease, box-shadow 0.28s ease, border-color 0.22s ease;
+}
+.stat:hover, .v-item:hover, .verify-card:hover, .faq-item:hover {
+  transform: translateY(-2px); box-shadow: var(--shadow);
+}
 .kicker { font-family: var(--mono); font-size: 11.5px; letter-spacing: 3px; text-transform: uppercase; color: var(--accent); }
 h2 { font-family: var(--display); font-size: clamp(28px, 3.6vw, 40px); font-weight: 700; letter-spacing: -0.8px; margin: 12px 0 16px; line-height: 1.1; color: var(--text); }
 .lead { color: var(--muted); max-width: 700px; margin-bottom: 28px; font-size: 15.5px; }
