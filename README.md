@@ -59,15 +59,15 @@ ResLab is the opposite. It treats research integrity as **infrastructure**:
 
 ## How it works
 
-1. **Design** — state the hypothesis, the planned test, and the power target.
-2. **Pre-register** — ResLab locks the plan with a real **SHA-256 checksum**
+1. **Design**: state the hypothesis, the planned test, and the power target.
+2. **Pre-register**: ResLab locks the plan with a real **SHA-256 checksum**
    before the data enters the picture. Edit the plan later and the lock breaks.
-3. **Analyze** — run the pre-registered (or exploratory) test. Every number is
+3. **Analyze**: run the pre-registered (or exploratory) test. Every number is
    computed by the engine and hard-verified before it can be recorded.
-4. **Detect** — integrity detectors watch for p-hacking patterns and flag them
-   *for review* — e.g. a significant result from a smaller-than-planned sample
-   triggers an optional-stopping finding.
-5. **Prove** — the audit chain shows every action; the raw data, its hash, and
+4. **Detect**: integrity detectors watch for p-hacking patterns and flag them
+   *for review* (e.g. a significant result from a smaller-than-planned sample
+   triggers an optional-stopping finding).
+5. **Prove**: the audit chain shows every action; the raw data, its hash, and
    the report are downloadable so anyone can re-run the math themselves.
 
 On the live site, **"Pre-registration workspace"** runs this whole flow in one
