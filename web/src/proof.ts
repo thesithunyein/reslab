@@ -541,7 +541,7 @@ function buildWriteup(opts: ProofOptions): HTMLElement {
       btn.textContent = 'Regenerate writeup';
       out.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     };
-    fetch('/writeup', {
+    fetch('/api/writeup', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),

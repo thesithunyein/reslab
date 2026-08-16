@@ -1,5 +1,5 @@
 /**
- * Cloudflare Pages Function: grounded study writeup.
+ * Vercel Serverless Function: grounded study writeup.
  *
  * The browser sends ONLY the numbers the engine already computed and verified.
  * This function validates them, asks an LLM to write Methods + Results +
@@ -7,8 +7,8 @@
  * "Computed statistics (source of truth)" table built server-side.
  *
  * The model interprets; the engine computes. The API key lives here as the
- * FEATHERLESS_API_KEY env var (set as a Pages secret) and never reaches the
- * client bundle.
+ * FEATHERLESS_API_KEY env var (set in the Vercel project) and never reaches
+ * the client bundle.
  */
 
 const MODELS = ['zai-org/GLM-5', 'moonshotai/Kimi-K2.5'];
@@ -19,20 +19,6 @@ const fmtNum = (x, digits = 4) => {
   if (x !== 0 && Math.abs(x) < 1e-4) return x.toExponential(3);
   return String(Number(x.toFixed(digits)));
 };
-
-function corsHeaders(origin) {
-  return {
-    'Content-Type': 'application/json',
-    'Access-Control-Allow-Origin': origin || '*',
-    'Access-Control-Allow-Methods': 'POST, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type',
-    'Access-Control-Max-Age': '86400',
-  };
-}
-
-function json(body, status, origin) {
-  return new Response(JSON.stringify(body), { status, headers: corsHeaders(origin) });
-}
 
 /** Validate and normalize the payload. Returns { value } or { error }. */
 function validate(input) {
@@ -179,23 +165,27 @@ async function callFeatherless(key, model, system, user) {
   return { content, model: data.model || model };
 }
 
-export async function onRequestPost(context) {
-  const origin = context.request.headers.get('Origin') || '';
-  const key = (context.env && context.env.FEATHERLESS_API_KEY) || '';
+export default async function handler(req, res) {
+  if (req.method === 'OPTIONS') {
+    res.status(204).end();
+    return;
+  }
+  if (req.method !== 'POST') {
+    res.status(405).json({ error: 'method not allowed' });
+    return;
+  }
 
+  const key = process.env.FEATHERLESS_API_KEY || '';
   if (!key) {
-    return json({ error: 'writeup service is not configured yet (FEATHERLESS_API_KEY missing on the server)' }, 503, origin);
+    res.status(503).json({ error: 'writeup service is not configured yet (FEATHERLESS_API_KEY missing on the server)' });
+    return;
   }
 
-  let input;
-  try {
-    input = await context.request.json();
-  } catch {
-    return json({ error: 'invalid JSON body' }, 400, origin);
+  const { value, error } = validate(req.body);
+  if (error) {
+    res.status(400).json({ error });
+    return;
   }
-
-  const { value, error } = validate(input);
-  if (error) return json({ error }, 400, origin);
 
   const { system, user } = buildPrompt(value);
   let lastErr = 'unknown error';
@@ -204,14 +194,12 @@ export async function onRequestPost(context) {
     if (result.error) {
       lastErr = result.error;
       if (result.error.includes('not found')) continue; // try next model
-      return json({ error: result.error }, 502, origin);
+      res.status(502).json({ error: result.error });
+      return;
     }
     const markdown = `${result.content.trim()}\n\n---\n\n${sourceTable(value)}`;
-    return json({ markdown, model: result.model }, 200, origin);
+    res.status(200).json({ markdown, model: result.model });
+    return;
   }
-  return json({ error: lastErr }, 502, origin);
-}
-
-export async function onRequestOptions() {
-  return new Response(null, { status: 204, headers: corsHeaders('*') });
+  res.status(502).json({ error: lastErr });
 }
