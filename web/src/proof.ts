@@ -324,7 +324,7 @@ function buildActions(opts: ProofOptions): HTMLElement {
   return card;
 }
 
-// ---- study writeup (LLM-grounded, with an honest local fallback) ----
+// ---- study writeup (LLM-grounded, with a deterministic local fallback) ----
 
 interface WriteupPayload {
   title: string;
