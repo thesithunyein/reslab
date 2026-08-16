@@ -9,14 +9,15 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
-  <script type="module" crossorigin src="./assets/index-zLTZSXuy.js"></script>
-  <link rel="stylesheet" crossorigin href="./assets/index-BFlsLyyJ.css">
+  <script type="module" crossorigin src="./assets/index-Cv_6Kti3.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-DSXUxJ6v.css">
 </head>
 <body>
   <nav>
     <div class="wrap nav-inner">
       <a class="brand" href="#top"><img src="./assets/logo.png" alt="ResLab" /><span>ResLab</span></a>
       <div class="nav-links">
+        <a href="#study">Pre-register</a>
         <a href="#analyze">Analyze</a>
         <a href="#verify">Verification</a>
         <a class="nav-cta" href="https://github.com/thesithunyein/reslab" target="_blank" rel="noopener">GitHub ↗</a>
@@ -59,6 +60,46 @@
       <div class="stat"><div class="stat-num">8+</div><div class="stat-lab">statistical methods, hard-verified</div></div>
       <div class="stat"><div class="stat-num">SHA-256</div><div class="stat-lab">hash-chained audit log</div></div>
       <div class="stat"><div class="stat-num">100%</div><div class="stat-lab">in-browser, data never leaves</div></div>
+    </div>
+  </section>
+
+  <!-- STUDY WORKSPACE -->
+  <section id="study">
+    <div class="wrap">
+      <div class="kicker">Pre-registration workspace</div>
+      <h2>Lock your plan <em class="grad">before you see the data</em></h2>
+      <p class="lead">Design a study, seal it with a SHA-256 checksum, analyze with the pre-registered test, and let the integrity detectors check the result. Every action lands on a tamper-evident audit trail.</p>
+      <div class="study-card reveal">
+        <div class="study-win">
+          <div class="study-side" id="studySteps">
+            <div class="study-side-title">Study flow</div>
+            <button class="s-step active" data-s="0"><span class="s-idx">1</span>Design</button>
+            <button class="s-step" data-s="1"><span class="s-idx">2</span>Pre-register</button>
+            <button class="s-step" data-s="2"><span class="s-idx">3</span>Analyze</button>
+            <button class="s-step" data-s="3"><span class="s-idx">4</span>Detect</button>
+            <button class="s-step" data-s="4"><span class="s-idx">5</span>Prove</button>
+            <button class="btn btn-primary study-run" id="studyRunAll">Run full flow <span class="arr">→</span></button>
+          </div>
+          <div class="study-main">
+            <div class="study-output" id="studyOutput"></div>
+            <div class="study-summary hidden" id="studySummary">
+              <div class="ss-head"><span class="ss-check">✓</span> Verified confirmatory result</div>
+              <div class="hs-grid">
+                <div class="hs-cell"><div class="hs-num" id="stT">···</div><div class="hs-lab">t</div></div>
+                <div class="hs-cell"><div class="hs-num" id="stDf">···</div><div class="hs-lab">df</div></div>
+                <div class="hs-cell"><div class="hs-num" id="stP">···</div><div class="hs-lab">p</div></div>
+                <div class="hs-cell"><div class="hs-num" id="stD">···</div><div class="hs-lab">Cohen's d</div></div>
+              </div>
+              <div class="hs-chips">
+                <span class="chip ok">hard verification passed</span>
+                <span class="chip warn">guardian: optional stopping</span>
+                <span class="chip dim">audit chain intact</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="study-status" id="studyStatus">ready. pick a step to run the flow.</div>
+      </div>
     </div>
   </section>
 

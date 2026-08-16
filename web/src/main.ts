@@ -1,5 +1,6 @@
 import './styles.css';
 import { CsvAnalyzer } from './csv';
+import { StudyFlow } from './study';
 
 function initReveal(): void {
   const els = Array.from(document.querySelectorAll<HTMLElement>('.reveal'));
@@ -21,6 +22,16 @@ function initReveal(): void {
   els.forEach((el) => io.observe(el));
 }
 
+function initStudy(): void {
+  const output = document.getElementById('studyOutput') as HTMLElement;
+  const status = document.getElementById('studyStatus') as HTMLElement;
+  const steps = document.querySelectorAll<HTMLButtonElement>('#studySteps .s-step');
+  const summary = document.getElementById('studySummary') as HTMLElement;
+  const flow = new StudyFlow(output, status, steps, summary);
+  void flow.init();
+  document.getElementById('studyRunAll')!.addEventListener('click', () => void flow.runAll());
+}
+
 function initCsv(): void {
   const el = (id: string): HTMLElement => document.getElementById(id)!;
   new CsvAnalyzer(
@@ -37,4 +48,5 @@ function initCsv(): void {
 }
 
 initReveal();
+initStudy();
 initCsv();
