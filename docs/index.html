@@ -9,8 +9,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
-  <script type="module" crossorigin src="./assets/index-YbPM0L4p.js"></script>
-  <link rel="stylesheet" crossorigin href="./assets/index-yhXiqfoB.css">
+  <script type="module" crossorigin src="./assets/index-BCSZ9a63.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-BqhmwKoo.css">
 </head>
 <body>
   <nav>
@@ -63,7 +63,7 @@
     <div class="wrap">
       <div class="kicker">Analyze your data</div>
       <h2>Drop a CSV. <em class="grad">Get the honest result.</em></h2>
-      <p class="lead">ResLab picks the right two-group test from your data's own assumptions and records everything on an audit trail.</p>
+      <p class="lead">Compare two groups and get a plain-English answer: is the difference real, or could it be luck? Every number is checked, and your data never leaves your browser.</p>
       <div class="csv-card reveal">
         <div class="dropzone" id="dropzone">
           <input type="file" id="fileInput" accept=".csv,.tsv,text/csv,text/plain" hidden />
@@ -72,7 +72,7 @@
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 16V4M7 9l5-5 5 5"/><path d="M4 15v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg>
             </div>
             <p><strong>Drop a CSV here</strong> or <span class="link" id="browseLink">browse</span></p>
-            <p class="dz-hint">Two numeric columns → mean comparison · any table for group tests</p>
+            <p class="dz-hint">One numeric column + one group column is all you need</p>
             <div class="dz-actions">
               <button class="btn btn-primary sample-btn" id="sampleBtn">Try the sample dataset <span class="arr">→</span></button>
               <button class="btn btn-ghost sample-btn" id="downloadBtn">Download a sample CSV</button>
@@ -122,12 +122,12 @@
             <div class="hs-cell"><div class="hs-num" id="stDf">···</div><div class="hs-lab">df</div></div>
             <div class="hs-cell"><div class="hs-num" id="stP">···</div><div class="hs-lab">p</div></div>
             <div class="hs-cell"><div class="hs-num" id="stD">···</div><div class="hs-lab">Cohen's d</div></div>
-          </div>
-          <div class="hs-chips">
-            <span class="chip ok">hard verification passed</span>
-            <span class="chip warn">guardian: optional stopping</span>
-            <span class="chip dim">audit chain intact · <span id="stEvents">0</span> events</span>
-          </div>
+          </div>              <div class="sr-verdict" id="stVerdict"></div>
+              <div class="hs-chips">
+                <span class="chip ok">hard verification passed</span>
+                <span class="chip warn">guardian: optional stopping</span>
+                <span class="chip dim">audit chain intact · <span id="stEvents">0</span> events</span>
+              </div>
           <div class="sr-recipe" id="stRecipe"></div>
         </div>
       </div>

@@ -1,11 +1,13 @@
 import {
   AuditLog,
+  descriptive,
   mannWhitney,
   newRegistry,
   recommendTwoGroupTest,
   ResearchSession,
   twoSampleT,
   verifyResult,
+  type DescriptiveStats,
   type TestRecommendation,
   type TestResult,
   type VerificationReport,
@@ -200,6 +202,8 @@ export class CsvAnalyzer {
   private async analyze(a: number[], b: number[], gA: string, gB: string, valueName: string, groupName: string): Promise<void> {
     const alpha = Number(this.alphaSel.value);
     const tails = Number(this.tailsSel.value) as 1 | 2;
+    const da = descriptive(a);
+    const db = descriptive(b);
     const rec = recommendTwoGroupTest(a, b);
     const result: TestResult =
       rec.recommended === 'two_sample_t'
@@ -219,7 +223,7 @@ export class CsvAnalyzer {
     });
     const chain = await audit.verify();
 
-    this.render(result, verification, chain.valid, audit.length, rec, alpha);
+    this.render(result, verification, chain.valid, audit.length, rec, alpha, da, db, gA, gB);
   }
 
   private render(
@@ -229,6 +233,10 @@ export class CsvAnalyzer {
     events: number,
     rec: TestRecommendation,
     alpha: number,
+    da: DescriptiveStats,
+    db: DescriptiveStats,
+    gA: string,
+    gB: string,
   ): void {
     this.result.innerHTML = '';
     const card = document.createElement('div');
@@ -243,6 +251,27 @@ export class CsvAnalyzer {
     title.textContent = 'Verified result';
     head.append(check, title);
     card.appendChild(head);
+
+    // plain-English verdict: the answer first
+    const significant = r.p < alpha;
+    const hi = da.mean >= db.mean ? gA : gB;
+    const lo = hi === gA ? gB : gA;
+    const hiM = Math.max(da.mean, db.mean);
+    const loM = Math.min(da.mean, db.mean);
+    const gap = Math.abs(da.mean - db.mean);
+    const chance = r.p < 0.001 ? 'less than 0.1%' : `about ${(r.p * 100).toFixed(2)}%`;
+    const f1 = (x: number): string => Number(x.toFixed(1)).toString();
+    const verdict = document.createElement('div');
+    verdict.className = 'sr-verdict';
+    verdict.textContent = significant
+      ? `${hi} averaged ${f1(hiM)} vs ${f1(loM)} for ${lo}, a ${f1(gap)}-point difference. That is statistically significant: the chance it is luck is ${chance}.`
+      : `${hi} averaged ${f1(hiM)} vs ${f1(loM)} for ${lo}, but the difference is not statistically significant (p = ${f4(r.p)}). It could easily be luck; more data would give a clearer answer.`;
+    card.appendChild(verdict);
+
+    const sub = document.createElement('div');
+    sub.className = 'sr-sub';
+    sub.textContent = 'The numbers behind it';
+    card.appendChild(sub);
 
     const grid = document.createElement('div');
     grid.className = 'hs-grid';
@@ -267,27 +296,31 @@ export class CsvAnalyzer {
     const why = document.createElement('div');
     why.className = 'sr-why';
     const whyText: Record<string, string> = {
-      two_sample_t: 'Both groups look normal with similar spreads, so the engine used the pooled t-test.',
-      welch_t: "The groups differ in spread, so the engine used Welch's t-test, which handles unequal variance.",
-      mann_whitney: 'The data is not normally shaped, so the engine used the rank-based Mann-Whitney test.',
+      two_sample_t: 'Used the pooled t-test (both groups look normal with similar spreads).',
+      welch_t: "Used Welch's t-test (the groups differ in spread, so variance is not assumed equal).",
+      mann_whitney: 'Used the Mann-Whitney test (the data is not normally shaped).',
     };
     why.textContent = whyText[rec.recommended] ?? rec.explanation;
     card.appendChild(why);
 
     const chips = document.createElement('div');
     chips.className = 'hs-chips';
-    const significant = r.p < alpha;
     const sig = document.createElement('span');
     sig.className = significant ? 'chip ok' : 'chip dim';
-    sig.textContent = significant ? `significant at α = ${alpha}` : `not significant at α = ${alpha}`;
+    sig.textContent = significant ? 'statistically significant' : 'not statistically significant';
     const ver = document.createElement('span');
     ver.className = verification.ok ? 'chip ok' : 'chip err';
-    ver.textContent = verification.ok ? 'hard verification passed' : 'hard verification failed';
+    ver.textContent = verification.ok ? 'every number verified' : 'verification failed';
     const aud = document.createElement('span');
     aud.className = chainValid ? 'chip dim' : 'chip err';
-    aud.textContent = chainValid ? `audit chain intact · ${events} event${events === 1 ? '' : 's'}` : 'audit chain broken';
+    aud.textContent = chainValid ? `recorded on the audit trail · ${events} event${events === 1 ? '' : 's'}` : 'audit trail broken';
     chips.append(sig, ver, aud);
     card.appendChild(chips);
+
+    const use = document.createElement('div');
+    use.className = 'sr-use';
+    use.textContent = 'For any two-group comparison: exam scores, click rates, experiment results. The first line is the answer; the numbers below are the receipt.';
+    card.appendChild(use);
 
     this.result.appendChild(card);
     this.result.classList.remove('hidden');

@@ -204,6 +204,9 @@ h1 em { font-style: normal; background: var(--grad); -webkit-background-clip: te
   font-size: 11px; font-weight: 800;
 }
 .sr-recipe { margin-top: 10px; font-family: var(--mono); font-size: 11px; color: var(--faint); text-align: center; }
+.sr-verdict { margin-top: 12px; font-size: 15px; font-weight: 600; color: var(--text); line-height: 1.6; max-width: 580px; }
+.sr-sub { margin-top: 16px; font-family: var(--mono); font-size: 10.5px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--faint); }
+.sr-use { margin-top: 10px; font-size: 12px; color: var(--faint); line-height: 1.55; max-width: 560px; }
 
 /* result tiles + chips */
 .hs-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 12px; }

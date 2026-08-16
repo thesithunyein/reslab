@@ -1,6 +1,7 @@
 import {
   AuditLog,
   createStudy,
+  descriptive,
   lockStudy,
   newRegistry,
   ResearchSession,
@@ -166,6 +167,15 @@ export class StudyFlow {
     set('stP', f4(r.p));
     set('stD', f4(r.effectSize!));
     set('stEvents', String(this.audit.length));
+    const dc = descriptive(this.control);
+    const dt = descriptive(this.treated);
+    const f1 = (x: number): string => Number(x.toFixed(1)).toString();
+    const hiM = Math.max(dc.mean, dt.mean);
+    const loM = Math.min(dc.mean, dt.mean);
+    set(
+      'stVerdict',
+      `Spaced repetition averaged ${f1(hiM)} vs ${f1(loM)} for massed practice, a statistically significant result (p = ${f4(r.p)}). The guardian also flagged the smaller-than-planned sample.`,
+    );
     document.getElementById('stRecipe')!.textContent = `recipe sha-256 ${recipeHash.slice(0, 14)}...`;
     this.result.classList.remove('hidden');
   }
