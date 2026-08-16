@@ -12,6 +12,31 @@ import { parseCsv } from './csv-parser';
 
 const f4 = (x: number): string => (x !== 0 && Math.abs(x) < 1e-4 ? x.toExponential(3) : Number(x.toFixed(4)).toString());
 
+function mulberry32(seed: number): () => number {
+  let a = seed >>> 0;
+  return () => {
+    a = (a + 0x6d2b79f5) >>> 0;
+    let t = a;
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+/** Deterministic sample: spaced-repetition vs massed-practice exam scores (n=40 each). */
+function sampleCsv(): string {
+  const rand = mulberry32(20260814);
+  const gauss = (): number => {
+    const u = Math.max(rand(), 1e-12);
+    const v = rand();
+    return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
+  };
+  const lines: string[] = ['study_condition,exam_score'];
+  for (let i = 0; i < 40; i++) lines.push(`spaced,${(78 + 10 * gauss()).toFixed(2)}`);
+  for (let i = 0; i < 40; i++) lines.push(`massed,${(67.5 + 10 * gauss()).toFixed(2)}`);
+  return lines.join('\n');
+}
+
 export class CsvAnalyzer {
   private rows: string[][] = [];
   private headers: string[] = [];
@@ -25,9 +50,14 @@ export class CsvAnalyzer {
     private groupSelect: HTMLSelectElement,
     private runBtn: HTMLButtonElement,
     private status: HTMLElement,
+    sampleBtn: HTMLButtonElement,
   ) {
     browseLink.addEventListener('click', () => fileInput.click());
     dropzone.addEventListener('click', () => fileInput.click());
+    sampleBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      void this.load(new File([sampleCsv()], 'sample-study.csv', { type: 'text/csv' }));
+    });
     fileInput.addEventListener('change', () => {
       const file = fileInput.files?.[0];
       if (file) void this.load(file);
@@ -85,18 +115,22 @@ export class CsvAnalyzer {
     }
     this.valueSelect.innerHTML = '';
     this.groupSelect.innerHTML = '';
+    let firstValue: string | null = null;
+    let firstGroup: string | null = null;
     for (let c = 0; c < this.headers.length; c++) {
       const numericness = numeric.get(c)!;
       const uniq = distinct.get(c)!.size;
       const isValue = numericness / Math.max(this.rows.length, 1) > 0.6;
       const isGroup = !isValue && uniq >= 2 && uniq <= 50;
-      this.valueSelect.add(new Option(`${this.headers[c]}${isValue ? '  (numeric ✓)' : ''}`, String(c), isValue));
-      this.groupSelect.add(new Option(`${this.headers[c]}${isGroup ? `  (${uniq} groups ✓)` : ''}`, String(c), isGroup));
+      this.valueSelect.add(new Option(`${this.headers[c]}${isValue ? '  (numeric ✓)' : ''}`, String(c), false, isValue));
+      this.groupSelect.add(new Option(`${this.headers[c]}${isGroup ? `  (${uniq} groups ✓)` : ''}`, String(c), false, isGroup));
+      if (isValue && firstValue === null) firstValue = String(c);
+      if (isGroup && firstGroup === null) firstGroup = String(c);
     }
     // Prefer a sensible default group column.
-    const groups = [...this.groupSelect.options].map((o) => o.value);
     const preferred = this.headers.findIndex((h) => /group|condition|arm|treatment|sex|gender|class|cohort/i.test(h));
-    if (preferred >= 0 && groups.includes(String(preferred))) this.groupSelect.value = String(preferred);
+    if (firstGroup !== null) this.groupSelect.value = preferred >= 0 ? String(preferred) : firstGroup;
+    if (firstValue !== null) this.valueSelect.value = firstValue;
   }
 
   private run(): void {

@@ -6,6 +6,9 @@
   <title>ResLab — the lab notebook that keeps science honest</title>
   <meta name="description" content="Design, pre-register, analyze, verify, detect. Real statistics, hard verification, tamper-evident provenance. Analyze your own CSV in the browser — your data never leaves your machine." />
   <link rel="icon" type="image/png" href="./assets/logo.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
 </head>
 <body>
   <nav>
@@ -21,57 +24,154 @@
     </div>
   </nav>
 
+  <!-- HERO -->
   <header id="top">
-    <div class="wrap">
-      <div class="hero-grid"></div>
-      <img class="logo" src="./assets/logo.png" alt="ResLab" width="180" />
-      <h1>The lab notebook that<br /><em>keeps science honest.</em></h1>
-      <p class="sub">Design a study. Pre-register it. Analyze with real, verified statistics.<br />
-        ResLab flags p-hacking before it becomes a finding — on a tamper-evident audit trail.</p>
-      <div class="cta-row">
-        <a class="btn btn-primary" href="#demo">Run the live demo</a>
-        <a class="btn btn-ghost" href="#analyze">Analyze your CSV</a>
+    <div class="hero-grid"></div>
+    <div class="hero-glow"></div>
+    <div class="wrap hero-inner">
+      <div class="hero-copy reveal">
+        <div class="kicker-pill"><span class="pulse-dot"></span>Real engine · running in your browser</div>
+        <h1>The lab notebook that <em>keeps science honest.</em></h1>
+        <p class="sub">Design a study. Pre-register it. Analyze with real, verified statistics.<br />
+          ResLab flags p-hacking before it becomes a finding — on a tamper-evident audit trail.</p>
+        <div class="cta-row">
+          <a class="btn btn-primary" href="#demo">Run the live demo <span class="arr">→</span></a>
+          <a class="btn btn-ghost" href="#analyze">Analyze your CSV</a>
+        </div>
+        <div class="badges">
+          <span class="badge"><span class="b-dot ok"></span>78 tests passing</span>
+          <span class="badge"><span class="b-dot ok"></span>validated vs. scipy / R</span>
+          <span class="badge"><span class="b-dot ok"></span>your data never leaves the browser</span>
+        </div>
       </div>
-      <div class="flow-tag">design → pre-register → analyze → verify → detect</div>
-      <div class="badges">
-        <span class="badge">78 tests passing</span>
-        <span class="badge">validated vs. scipy/R</span>
-        <span class="badge">your data never leaves the browser</span>
+
+      <!-- Live product window: real engine, auto-played -->
+      <div class="studio-wrap reveal">
+        <div class="studio">
+          <div class="studio-bar">
+            <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+            <span class="studio-title">ResLab Studio — pre-registered analysis</span>
+            <button class="replay" id="heroReplay" title="Replay">↻</button>
+            <span class="live-pill">LIVE</span>
+          </div>
+          <div class="studio-body">
+            <div class="studio-side" id="heroSteps">
+              <button class="s-step active" data-s="0"><span class="s-idx">1</span>Design</button>
+              <button class="s-step" data-s="1"><span class="s-idx">2</span>Pre-register</button>
+              <button class="s-step" data-s="2"><span class="s-idx">3</span>Analyze</button>
+              <button class="s-step" data-s="3"><span class="s-idx">4</span>Detect</button>
+              <button class="s-step" data-s="4"><span class="s-idx">5</span>Prove</button>
+            </div>
+            <div class="studio-main">
+              <div class="studio-output" id="heroOutput"></div>
+              <div class="hero-summary hidden" id="heroSummary">
+                <div class="hs-head"><span class="hs-check">✓</span> Verified confirmatory result</div>
+                <div class="hs-grid">
+                  <div class="hs-cell"><div class="hs-num" id="hsT">—</div><div class="hs-lab">t</div></div>
+                  <div class="hs-cell"><div class="hs-num" id="hsDf">—</div><div class="hs-lab">df</div></div>
+                  <div class="hs-cell"><div class="hs-num" id="hsP">—</div><div class="hs-lab">p</div></div>
+                  <div class="hs-cell"><div class="hs-num" id="hsD">—</div><div class="hs-lab">Cohen's d</div></div>
+                </div>
+                <div class="hs-chips">
+                  <span class="chip ok" id="hsVer">hard verification PASSED</span>
+                  <span class="chip warn" id="hsFlag">guardian: optional stopping</span>
+                  <span class="chip dim" id="hsHash">audit chain INTACT</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="studio-status" id="heroStatus">booting reslab engine…</div>
+        </div>
       </div>
     </div>
   </header>
 
+  <!-- STATS STRIP -->
+  <section class="stats-strip">
+    <div class="wrap stats-grid reveal">
+      <div class="stat"><div class="stat-num">78</div><div class="stat-lab">automated tests, all green in CI</div></div>
+      <div class="stat"><div class="stat-num">8+</div><div class="stat-lab">statistical methods, hard-verified</div></div>
+      <div class="stat"><div class="stat-num">SHA-256</div><div class="stat-lab">hash-chained, tamper-evident audit log</div></div>
+      <div class="stat"><div class="stat-num">100%</div><div class="stat-lab">in-browser — your data never leaves</div></div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
   <section id="how">
     <div class="wrap">
       <div class="kicker">How it works</div>
-      <h2>The honest research flow, enforced by design</h2>
+      <h2>The honest research flow, <em class="grad">enforced by design</em></h2>
+      <p class="lead">Six steps, from hypothesis to reproducible provenance. Each one is enforced by the engine — not by willpower.</p>
       <div class="steps">
-        <div class="step"><div class="num">01 · DESIGN</div><h3>Before any data</h3><p>Hypothesis, outcome, planned test, alpha — with power analysis telling you what effect you can actually detect with the sample you can afford.</p></div>
-        <div class="step"><div class="num">02 · PRE-REGISTER</div><h3>Locked, tamper-evident</h3><p>The plan is sealed with a SHA-256 checksum and written to a hash-chained audit log. Revisions create new versions; the original is never mutated.</p></div>
-        <div class="step"><div class="num">03 · ANALYZE</div><h3>Real numbers only</h3><p>t, Welch, paired t, ANOVA, Pearson, Mann-Whitney, Levene, Jarque-Bera — computed, never generated. No LLM touches a number.</p></div>
-        <div class="step"><div class="num">04 · TWO LANES</div><h3>Confirmatory vs. exploratory</h3><p>Claims come only from the pre-registered lane. Post-hoc exploration is allowed — but labeled and walled off. Hypotheses, never conclusions.</p></div>
-        <div class="step"><div class="num">05 · DETECT</div><h3>The guardian</h3><p>Test switching, tail switching, outcome switching, optional stopping, subgroup slicing, undeclared outlier removal, multiple comparisons — each flagged with its bias explained.</p></div>
-        <div class="step"><div class="num">06 · PROVE</div><h3>Reproducible forever</h3><p>The audit chain verifies nothing was changed. A reproducibility recipe lets anyone replay the exact analysis — same data, same tests, same numbers.</p></div>
+        <div class="step reveal">
+          <div class="step-icon" data-i="1">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="3.5"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2"/></svg>
+          </div>
+          <div class="num">01 · DESIGN</div>
+          <h3>Before any data</h3>
+          <p>Hypothesis, outcome, planned test, alpha — with power analysis telling you what effect you can actually detect with the sample you can afford.</p>
+        </div>
+        <div class="step reveal">
+          <div class="step-icon" data-i="2">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/><circle cx="12" cy="15" r="1.4" fill="currentColor" stroke="none"/></svg>
+          </div>
+          <div class="num">02 · PRE-REGISTER</div>
+          <h3>Locked, tamper-evident</h3>
+          <p>The plan is sealed with a SHA-256 checksum and written to a hash-chained audit log. Revisions create new versions; the original is never mutated.</p>
+        </div>
+        <div class="step reveal">
+          <div class="step-icon" data-i="3">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 20V10M10 20V4M16 20v-8M22 20H2"/></svg>
+          </div>
+          <div class="num">03 · ANALYZE</div>
+          <h3>Real numbers only</h3>
+          <p>t, Welch, paired t, ANOVA, Pearson, Mann-Whitney, Levene, Jarque-Bera — computed, never generated. No LLM touches a number.</p>
+        </div>
+        <div class="step reveal">
+          <div class="step-icon" data-i="4">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3v18M12 3l-7 7M12 3l7 7M12 21l-6-6M12 21l6-6"/></svg>
+          </div>
+          <div class="num">04 · TWO LANES</div>
+          <h3>Confirmatory vs. exploratory</h3>
+          <p>Claims come only from the pre-registered lane. Post-hoc exploration is allowed — but labeled and walled off. Hypotheses, never conclusions.</p>
+        </div>
+        <div class="step reveal">
+          <div class="step-icon" data-i="5">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2l8 3v6c0 5-3.5 8.5-8 11-4.5-2.5-8-6-8-11V5z"/><path d="M12 8v5M12 16.2v.1"/></svg>
+          </div>
+          <div class="num">05 · DETECT</div>
+          <h3>The guardian</h3>
+          <p>Test switching, tail switching, outcome switching, optional stopping, subgroup slicing, undeclared outlier removal, multiple comparisons — each flagged with its bias explained.</p>
+        </div>
+        <div class="step reveal">
+          <div class="step-icon" data-i="6">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M8.5 12.2l2.4 2.4 4.6-5"/></svg>
+          </div>
+          <div class="num">06 · PROVE</div>
+          <h3>Reproducible forever</h3>
+          <p>The audit chain verifies nothing was changed. A reproducibility recipe lets anyone replay the exact analysis — same data, same tests, same numbers.</p>
+        </div>
       </div>
     </div>
   </section>
 
+  <!-- LIVE DEMO -->
   <section id="demo">
     <div class="wrap">
       <div class="kicker">Live demo — real engine, real numbers</div>
-      <h2>Watch the guardian catch a p-hacking pattern</h2>
+      <h2>Watch the guardian catch a <em class="grad">p-hacking pattern</em></h2>
       <p class="lead">This runs the actual ResLab engine in your browser. Step through a pre-registered study and watch the guardian flag a sample smaller than planned.</p>
-      <div class="demo-layout">
+      <div class="demo-layout reveal">
         <div class="stepper" id="stepper">
-          <button class="step-btn active" data-step="0"><span class="idx">1</span> Design the study</button>
-          <button class="step-btn" data-step="1"><span class="idx">2</span> Pre-register (lock)</button>
-          <button class="step-btn" data-step="2"><span class="idx">3</span> Collect data</button>
-          <button class="step-btn" data-step="3"><span class="idx">4</span> Confirmatory analysis</button>
-          <button class="step-btn" data-step="4"><span class="idx">5</span> Run detectors</button>
-          <button class="step-btn" data-step="5"><span class="idx">6</span> Verify provenance</button>
-          <button class="btn btn-primary run-all" id="runAll">Run all</button>
+          <button class="step-btn active" data-step="0"><span class="idx">1</span><span>Design the study</span></button>
+          <button class="step-btn" data-step="1"><span class="idx">2</span><span>Pre-register (lock)</span></button>
+          <button class="step-btn" data-step="2"><span class="idx">3</span><span>Collect data</span></button>
+          <button class="step-btn" data-step="3"><span class="idx">4</span><span>Confirmatory analysis</span></button>
+          <button class="step-btn" data-step="4"><span class="idx">5</span><span>Run detectors</span></button>
+          <button class="step-btn" data-step="5"><span class="idx">6</span><span>Verify provenance</span></button>
+          <button class="btn btn-primary run-all" id="runAll">Run all <span class="arr">→</span></button>
         </div>
-        <div class="terminal" id="demoTerminal">
+        <div class="terminal">
           <div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="term-title">reslab — honest flow</span></div>
           <div class="term-body" id="demoOutput"></div>
         </div>
@@ -80,52 +180,68 @@
     </div>
   </section>
 
+  <!-- CSV ANALYZER -->
   <section id="analyze">
     <div class="wrap">
       <div class="kicker">Try it on your data</div>
-      <h2>Analyze a CSV right here — nothing leaves your browser</h2>
+      <h2>Analyze a CSV right here — <em class="grad">nothing leaves your browser</em></h2>
       <p class="lead">Drop in a CSV, pick the value and group columns, and ResLab runs a real two-group test — choosing the right one from the data's own assumptions.</p>
-      <div class="csv-card">
+      <div class="csv-card reveal">
         <div class="dropzone" id="dropzone">
           <input type="file" id="fileInput" accept=".csv,.tsv,text/csv,text/plain" hidden />
           <div class="dz-inner">
-            <div class="dz-icon">⬆</div>
+            <div class="dz-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 16V4M7 9l5-5 5 5"/><path d="M4 15v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg>
+            </div>
             <p><strong>Drop a CSV here</strong> or <span class="link" id="browseLink">browse</span></p>
             <p class="dz-hint">Two numeric columns → mean comparison · or any table for group tests</p>
+            <button class="btn btn-ghost sample-btn" id="sampleBtn">or try the sample dataset →</button>
           </div>
         </div>
         <div id="csvControls" class="csv-controls" hidden>
           <label>Value column <select id="valueCol"></select></label>
           <label>Group column <select id="groupCol"></select></label>
-          <button class="btn btn-primary" id="runCsv">Run two-group analysis</button>
+          <button class="btn btn-primary" id="runCsv">Run two-group analysis <span class="arr">→</span></button>
         </div>
         <div class="csv-status" id="csvStatus"></div>
       </div>
     </div>
   </section>
 
+  <!-- VERIFICATION -->
   <section id="verify">
     <div class="wrap">
       <div class="kicker">Verification, not vibes</div>
-      <h2>The engine is validated against known values</h2>
+      <h2>The engine is validated against <em class="grad">known values</em></h2>
       <p class="lead">The statistics library is cross-checked against published references — the same numbers you'd get from R or scipy — in an automated suite (78 tests, all green in CI).</p>
-      <table>
-        <tr><th>Check</th><th>Expected</th><th>Source</th></tr>
-        <tr><td>t(10, two-sided, α = 0.05)</td><td><code>2.228 → p ≈ 0.05</code></td><td>t-table</td></tr>
-        <tr><td>F(2, 27) 95th percentile</td><td><code>3.354 → p ≈ 0.05</code></td><td>F-table</td></tr>
-        <tr><td>R sleep dataset, paired t</td><td><code>t = −4.0621, df = 9, p = 0.002833</code></td><td>R</td></tr>
-        <tr><td>R PlantGrowth ANOVA</td><td><code>F = 4.846, p = 0.01591, η² = 0.264</code></td><td>R</td></tr>
-        <tr><td>Anscombe I correlation</td><td><code>r = 0.81642, p = 0.00217</code></td><td>Anscombe</td></tr>
-        <tr><td>Mann-Whitney, fully separated n₁=n₂=4</td><td><code>U = 0, p = 2/70 exactly</code></td><td>exact enumeration</td></tr>
-      </table>
+      <div class="verify-layout reveal">
+        <div class="verify-card">
+          <table>
+            <tr><th>Check</th><th>Expected</th><th>Source</th></tr>
+            <tr><td>t(10, two-sided, α = 0.05)</td><td><code>2.228 → p ≈ 0.05</code></td><td>t-table</td></tr>
+            <tr><td>F(2, 27) 95th percentile</td><td><code>3.354 → p ≈ 0.05</code></td><td>F-table</td></tr>
+            <tr><td>R sleep dataset, paired t</td><td><code>t = −4.0621, df = 9, p = 0.002833</code></td><td>R</td></tr>
+            <tr><td>R PlantGrowth ANOVA</td><td><code>F = 4.846, p = 0.01591, η² = 0.264</code></td><td>R</td></tr>
+            <tr><td>Anscombe I correlation</td><td><code>r = 0.81642, p = 0.00217</code></td><td>Anscombe</td></tr>
+            <tr><td>Mann-Whitney, fully separated n₁=n₂=4</td><td><code>U = 0, p = 2/70 exactly</code></td><td>exact enumeration</td></tr>
+          </table>
+        </div>
+        <div class="verify-side">
+          <div class="v-item"><span class="v-ico">⚙</span><div><strong>Hard verification</strong><p>Every result passes code-level assertions: no NaN, no out-of-range p/df/n can ever enter the record.</p></div></div>
+          <div class="v-item"><span class="v-ico">🔗</span><div><strong>Hash-chained audit</strong><p>Every action is chained with SHA-256. A silent edit breaks the chain — visibly.</p></div></div>
+          <div class="v-item"><span class="v-ico">🧪</span><div><strong>Independent references</strong><p>Expected values come from R, scipy, published tables, and exact enumeration — never from the code under test.</p></div></div>
+          <a class="btn btn-ghost wide" href="https://github.com/thesithunyein/reslab" target="_blank" rel="noopener">Browse the source &amp; tests ↗</a>
+        </div>
+      </div>
     </div>
   </section>
 
   <footer>
     <div class="wrap">
-      <img src="./assets/logo.png" alt="ResLab" width="48" />
-      <p><strong>ResLab</strong> — built for Impact Forge 2026. Every number is computed, verified, and reproducible.</p>
-      <p><a href="https://github.com/thesithunyein/reslab" target="_blank" rel="noopener">github.com/thesithunyein/reslab</a> · reslab.sithunyein.com</p>
+      <img src="./assets/logo.png" alt="ResLab" width="44" />
+      <p class="f-brand"><strong>ResLab</strong> — built for Impact Forge 2026. Every number is computed, verified, and reproducible.</p>
+      <p class="f-links"><a href="https://github.com/thesithunyein/reslab" target="_blank" rel="noopener">github.com/thesithunyein/reslab</a> · reslab.sithunyein.com</p>
+      <div class="f-flow">design → pre-register → analyze → verify → detect</div>
     </div>
   </footer>
 
