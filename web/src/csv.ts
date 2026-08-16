@@ -7,6 +7,10 @@ import {
   ResearchSession,
   twoSampleT,
   verifyResult,
+  type DescriptiveStats,
+  type TestRecommendation,
+  type TestResult,
+  type VerificationReport,
 } from '@reslab/core';
 import { parseCsv } from './csv-parser';
 
@@ -50,17 +54,39 @@ export class CsvAnalyzer {
     private groupSelect: HTMLSelectElement,
     private runBtn: HTMLButtonElement,
     private status: HTMLElement,
+    private result: HTMLElement,
     sampleBtn: HTMLButtonElement,
+    private downloadBtn: HTMLButtonElement,
+    private advToggle: HTMLButtonElement,
+    private advPanel: HTMLElement,
+    private alphaSel: HTMLSelectElement,
+    private tailsSel: HTMLSelectElement,
   ) {
     browseLink.addEventListener('click', () => fileInput.click());
     dropzone.addEventListener('click', () => fileInput.click());
     sampleBtn.addEventListener('click', (e) => {
       e.stopPropagation();
-      void this.load(new File([sampleCsv()], 'sample-study.csv', { type: 'text/csv' }));
+      void this.load(new File([sampleCsv()], 'sample-study.csv', { type: 'text/csv' }), true);
+    });
+    downloadBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const blob = new Blob([sampleCsv()], { type: 'text/csv' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'reslab-sample.csv';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    });
+    advToggle.addEventListener('click', () => {
+      this.advPanel.classList.toggle('hidden');
+      this.advToggle.classList.toggle('open');
     });
     fileInput.addEventListener('change', () => {
       const file = fileInput.files?.[0];
-      if (file) void this.load(file);
+      if (file) void this.load(file, false);
     });
     for (const ev of ['dragover', 'dragenter']) {
       dropzone.addEventListener(ev, (e) => {
@@ -76,27 +102,32 @@ export class CsvAnalyzer {
     }
     dropzone.addEventListener('drop', (e) => {
       const file = e.dataTransfer?.files?.[0];
-      if (file) void this.load(file);
+      if (file) void this.load(file, false);
     });
     runBtn.addEventListener('click', () => this.run());
   }
 
-  private async load(file: File): Promise<void> {
+  private async load(file: File, autoRun: boolean): Promise<void> {
     const text = await file.text();
     const rows = parseCsv(text);
     if (rows.length < 2) {
-      this.status.textContent = '✗ Could not parse the file. Expected a CSV with a header row.';
+      this.status.textContent = 'Could not parse the file. Expected a CSV with a header row.';
       return;
     }
     this.headers = rows[0]!.map((h) => h.trim());
     this.rows = rows.slice(1);
     if (this.headers.length === 0 || this.rows.length === 0) {
-      this.status.textContent = '✗ Empty file or missing header row.';
+      this.status.textContent = 'Empty file or missing header row.';
       return;
     }
     this.populateSelects();
     this.controls.hidden = false;
-    this.status.textContent = `✓ Loaded ${this.rows.length} rows × ${this.headers.length} columns from ${file.name}`;
+    this.status.textContent = `Loaded ${this.rows.length} rows from ${file.name}. Ready to analyze.`;
+    if (autoRun) {
+      this.status.textContent = 'Analyzing the sample dataset...';
+      await new Promise((r) => setTimeout(r, 80));
+      this.run();
+    }
   }
 
   private populateSelects(): void {
@@ -127,7 +158,6 @@ export class CsvAnalyzer {
       if (isValue && firstValue === null) firstValue = String(c);
       if (isGroup && firstGroup === null) firstGroup = String(c);
     }
-    // Prefer a sensible default group column.
     const preferred = this.headers.findIndex((h) => /group|condition|arm|treatment|sex|gender|class|cohort/i.test(h));
     if (firstGroup !== null) this.groupSelect.value = preferred >= 0 ? String(preferred) : firstGroup;
     if (firstValue !== null) this.valueSelect.value = firstValue;
@@ -137,7 +167,7 @@ export class CsvAnalyzer {
     const valueCol = Number(this.valueSelect.value);
     const groupCol = Number(this.groupSelect.value);
     if (!Number.isFinite(valueCol) || !Number.isFinite(groupCol)) {
-      this.status.textContent = '✗ Select a value column and a group column first.';
+      this.status.textContent = 'Select a value column and a group column first.';
       return;
     }
     const counts = new Map<string, number>();
@@ -147,7 +177,7 @@ export class CsvAnalyzer {
     }
     const top = [...counts.entries()].sort((a, b) => b[1] - a[1]).slice(0, 2);
     if (top.length < 2) {
-      this.status.textContent = '✗ Need at least two groups in the group column.';
+      this.status.textContent = 'Need at least two groups in the group column.';
       return;
     }
     const [gA, gB] = [top[0]![0], top[1]![0]];
@@ -163,28 +193,29 @@ export class CsvAnalyzer {
     const a = collect(gA);
     const b = collect(gB);
     if (a.length < 2 || b.length < 2) {
-      this.status.textContent = '✗ Each group needs at least 2 numeric values.';
+      this.status.textContent = 'Each group needs at least 2 numeric values.';
       return;
     }
-
     void this.analyze(a, b, gA, gB, this.headers[valueCol]!, this.headers[groupCol]!);
   }
 
   private async analyze(a: number[], b: number[], gA: string, gB: string, valueName: string, groupName: string): Promise<void> {
+    const alpha = Number(this.alphaSel.value);
+    const tails = Number(this.tailsSel.value) as 1 | 2;
     const da = descriptive(a);
     const db = descriptive(b);
     const rec = recommendTwoGroupTest(a, b);
-    const result =
+    const result: TestResult =
       rec.recommended === 'two_sample_t'
-        ? twoSampleT(a, b, { equalVariance: true })
+        ? twoSampleT(a, b, { equalVariance: true, tails })
         : rec.recommended === 'welch_t'
-          ? twoSampleT(a, b, { equalVariance: false })
+          ? twoSampleT(a, b, { equalVariance: false, tails })
           : mannWhitney(a, b);
     const verification = verifyResult(result);
 
     const audit = new AuditLog();
     const session = new ResearchSession(audit, newRegistry());
-    const run = await session.runAnalysis({
+    await session.runAnalysis({
       lane: 'exploratory',
       test: result.test,
       data: { groups: [a, b] },
@@ -192,26 +223,87 @@ export class CsvAnalyzer {
     });
     const chain = await audit.verify();
 
-    const lines: Array<{ text: string; cls: string }> = [];
-    const push = (text: string, cls = ''): void => {
-      lines.push({ text, cls });
-    };
-    push(`ResLab analysis: ${groupName} vs ${valueName}  (exploratory lane, labeled post-hoc)`);
-    push(`========================================================================`, 't-rule');
-    push(`${gA}:  n=${da.n}  mean=${f4(da.mean)}  sd=${f4(da.sd)}  median=${f4(da.median)}`);
-    push(`${gB}:  n=${db.n}  mean=${f4(db.mean)}  sd=${f4(db.sd)}  median=${f4(db.median)}`);
-    push('');
-    push(`Assumption checks (why this test):`);
-    for (const c of rec.checks) push(`  ${c.interpretation}`);
-    push(`  → ${rec.explanation}`);
-    push('');
-    push(`Test: ${result.method}`);
-    push(`  statistic = ${f4(result.statistic)}  ${result.df !== undefined ? `df = ${f4(result.df)}  ` : ''}p = ${f4(result.p)}${result.effectSize !== undefined ? `  effect = ${f4(result.effectSize)}` : ''}`);
-    push(`  Hard verification: ${verification.ok ? 'PASSED ✓' : 'FAILED ✗'}   ${verification.errors.join('; ')}`, verification.ok ? 't-ok' : 't-err');
-    push(`  Audit chain: ${chain.valid ? 'INTACT ✓' : 'BROKEN ✗'} (${audit.length} events)`, chain.valid ? 't-ok' : 't-err');
-    push(`  Note: this is exploratory; it generates hypotheses, never conclusions.`, 't-dim');
-    push(`  ${run.id.slice(0, 13)}… recorded in the audit log.`, 't-dim');
+    this.render(result, verification, chain.valid, audit.length, da, db, rec, gA, gB, alpha);
+  }
 
-    this.status.innerHTML = lines.map((l) => `<div class="res-line ${l.cls}">${l.text}</div>`).join('');
+  private render(
+    r: TestResult,
+    verification: VerificationReport,
+    chainValid: boolean,
+    events: number,
+    da: DescriptiveStats,
+    db: DescriptiveStats,
+    rec: TestRecommendation,
+    gA: string,
+    gB: string,
+    alpha: number,
+  ): void {
+    this.result.innerHTML = '';
+    const card = document.createElement('div');
+    card.className = 'csv-result';
+
+    const head = document.createElement('div');
+    head.className = 'sr-head';
+    const check = document.createElement('span');
+    check.className = 'sr-check';
+    check.textContent = '✓';
+    const title = document.createElement('span');
+    title.textContent = 'Verified result';
+    head.append(check, title);
+    card.appendChild(head);
+
+    const grid = document.createElement('div');
+    grid.className = 'hs-grid';
+    const tiles: Array<[string, string]> = [[f4(r.statistic), r.test === 'mann_whitney' ? 'U' : 't']];
+    if (r.df !== undefined) tiles.push([f4(r.df), 'df']);
+    tiles.push([f4(r.p), 'p']);
+    if (r.effectSize !== undefined) tiles.push([f4(r.effectSize), "Cohen's d"]);
+    for (const [v, l] of tiles) {
+      const cell = document.createElement('div');
+      cell.className = 'hs-cell';
+      const n = document.createElement('div');
+      n.className = 'hs-num';
+      n.textContent = v;
+      const lab = document.createElement('div');
+      lab.className = 'hs-lab';
+      lab.textContent = l;
+      cell.append(n, lab);
+      grid.appendChild(cell);
+    }
+    card.appendChild(grid);
+
+    const why = document.createElement('div');
+    why.className = 'sr-why';
+    why.textContent = `${r.method}. ${rec.explanation}`;
+    card.appendChild(why);
+
+    const chips = document.createElement('div');
+    chips.className = 'hs-chips';
+    const significant = r.p < alpha;
+    const sig = document.createElement('span');
+    sig.className = significant ? 'chip ok' : 'chip dim';
+    sig.textContent = significant ? `significant at α = ${alpha}` : `not significant at α = ${alpha}`;
+    const ver = document.createElement('span');
+    ver.className = verification.ok ? 'chip ok' : 'chip err';
+    ver.textContent = verification.ok ? 'hard verification passed' : 'hard verification failed';
+    const aud = document.createElement('span');
+    aud.className = chainValid ? 'chip dim' : 'chip err';
+    aud.textContent = chainValid ? `audit chain intact · ${events} event${events === 1 ? '' : 's'}` : 'audit chain broken';
+    chips.append(sig, ver, aud);
+    card.appendChild(chips);
+
+    const meta = document.createElement('div');
+    meta.className = 'sr-meta';
+    meta.textContent = `${gA}: n=${da.n} mean=${f4(da.mean)}  ·  ${gB}: n=${db.n} mean=${f4(db.mean)}`;
+    card.appendChild(meta);
+
+    const note = document.createElement('div');
+    note.className = 'sr-note';
+    note.textContent = 'Exploratory analysis: it generates hypotheses, never conclusions.';
+    card.appendChild(note);
+
+    this.result.appendChild(card);
+    this.result.classList.remove('hidden');
+    this.status.textContent = '';
   }
 }

@@ -58,7 +58,13 @@ function initCsv(): void {
     el('groupCol') as HTMLSelectElement,
     el('runCsv') as HTMLButtonElement,
     el('csvStatus') as HTMLElement,
+    el('csvResult') as HTMLElement,
     el('sampleBtn') as HTMLButtonElement,
+    el('downloadBtn') as HTMLButtonElement,
+    el('advToggle') as HTMLButtonElement,
+    el('advPanel') as HTMLElement,
+    el('alphaSel') as HTMLSelectElement,
+    el('tailsSel') as HTMLSelectElement,
   );
 }
 

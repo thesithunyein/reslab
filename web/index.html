@@ -71,24 +71,26 @@
             </div>
             <p><strong>Drop a CSV here</strong> or <span class="link" id="browseLink">browse</span></p>
             <p class="dz-hint">Two numeric columns → mean comparison · any table for group tests</p>
-            <button class="btn btn-ghost sample-btn" id="sampleBtn">or try the sample dataset →</button>
+            <div class="dz-actions">
+              <button class="btn btn-primary sample-btn" id="sampleBtn">Try the sample dataset <span class="arr">→</span></button>
+              <button class="btn btn-ghost sample-btn" id="downloadBtn">Download a sample CSV</button>
+            </div>
           </div>
         </div>
         <div id="csvControls" class="csv-controls" hidden>
           <label>Value column <select id="valueCol"></select></label>
           <label>Group column <select id="groupCol"></select></label>
-          <button class="btn btn-primary" id="runCsv">Run two-group analysis <span class="arr">→</span></button>
+          <button class="btn btn-primary" id="runCsv">Run analysis <span class="arr">→</span></button>
+        </div>
+        <div class="csv-adv">
+          <button class="adv-toggle" id="advToggle" type="button">Advanced options <span class="adv-caret"></span></button>
+          <div class="adv-panel hidden" id="advPanel">
+            <label>Alpha level <select id="alphaSel"><option value="0.05" selected>0.05</option><option value="0.01">0.01</option><option value="0.10">0.10</option></select></label>
+            <label>Tails <select id="tailsSel"><option value="2" selected>two-tailed</option><option value="1">one-tailed</option></select></label>
+          </div>
         </div>
         <div class="csv-status" id="csvStatus"></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- PRODUCT SHOWCASE -->
-  <section class="showcase">
-    <div class="wrap">
-      <div class="media-frame wide reveal">
-        <video class="media-video" src="./assets/section-features.mp4" poster="./assets/section-features-poster.jpg" autoplay muted loop playsinline></video>
+        <div id="csvResult" class="hidden"></div>
       </div>
     </div>
   </section>
@@ -135,24 +137,11 @@
     <div class="wrap">
       <div class="kicker">Verification, not vibes</div>
       <h2>Validated against <em class="grad">known values</em></h2>
-      <p class="lead">Cross-checked against published references, the numbers you'd get from R or scipy, in an automated suite.</p>
-      <div class="verify-layout reveal">
-        <div class="verify-card">
-          <table>
-            <tr><th>Check</th><th>Expected</th><th>Source</th></tr>
-            <tr><td>t(10, two-sided, α = 0.05)</td><td><code>2.228 → p ≈ 0.05</code></td><td>t-table</td></tr>
-            <tr><td>F(2, 27) 95th percentile</td><td><code>3.354 → p ≈ 0.05</code></td><td>F-table</td></tr>
-            <tr><td>R sleep dataset, paired t</td><td><code>t = −4.0621, df = 9, p = 0.002833</code></td><td>R</td></tr>
-            <tr><td>R PlantGrowth ANOVA</td><td><code>F = 4.846, p = 0.01591, η² = 0.264</code></td><td>R</td></tr>
-            <tr><td>Anscombe I correlation</td><td><code>r = 0.81642, p = 0.00217</code></td><td>Anscombe</td></tr>
-            <tr><td>Mann-Whitney, fully separated n₁=n₂=4</td><td><code>U = 0, p = 2/70 exactly</code></td><td>exact enumeration</td></tr>
-          </table>
-        </div>
-        <div class="verify-side">
-          <div class="v-item"><span class="v-ico">⚙</span><div><strong>Hard verification</strong><p>No NaN or out-of-range p/df/n can enter the record.</p></div></div>
-          <div class="v-item"><span class="v-ico">🔗</span><div><strong>Hash-chained audit</strong><p>A silent edit breaks the chain, visibly.</p></div></div>
-          <a class="btn btn-ghost wide" href="https://github.com/thesithunyein/reslab" target="_blank" rel="noopener">Browse the source and tests ↗</a>
-        </div>
+      <p class="lead">Every result is checked against published references and recorded on a tamper-evident trail. No vibes, no black boxes.</p>
+      <div class="verify-cards reveal">
+        <div class="verify-check"><div class="vc-ico">✓</div><div><strong>Verified against R and scipy</strong><p>t, F, χ² and U values cross-checked to known published numbers.</p></div></div>
+        <div class="verify-check"><div class="vc-ico">🔗</div><div><strong>Tamper-evident audit</strong><p>Every action lands on a SHA-256 hash chain. One silent edit breaks it, visibly.</p></div></div>
+        <div class="verify-check"><div class="vc-ico">🧪</div><div><strong>78 tests, green in CI</strong><p>Every commit runs the full suite against those reference values.</p></div></div>
       </div>
       <div class="media-frame wide reveal">
         <video class="media-video" src="./assets/section-dashboard.mp4" poster="./assets/section-dashboard-poster.jpg" autoplay muted loop playsinline></video>
@@ -193,14 +182,6 @@
       </div>
     </div>
   </section>
-
-  <footer>
-    <div class="wrap">
-      <img src="./assets/logo.png" alt="ResLab" width="40" />
-      <p class="f-brand"><strong>ResLab</strong>. Every number is computed, verified, and reproducible.</p>
-      <p class="f-links"><a href="https://github.com/thesithunyein/reslab" target="_blank" rel="noopener">github.com/thesithunyein/reslab</a> · reslab.sithunyein.com</p>
-    </div>
-  </footer>
 
   <script type="module" src="/src/main.ts"></script>
 </body>
