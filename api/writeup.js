@@ -147,7 +147,7 @@ async function callFeatherless(key, model, system, user) {
         { role: 'system', content: system },
         { role: 'user', content: user },
       ],
-      max_tokens: 1200,
+      max_tokens: 8192,
       temperature: 0.2,
     }),
     signal: AbortSignal.timeout(120000),
@@ -193,7 +193,7 @@ export default async function handler(req, res) {
     const result = await callFeatherless(key, model, system, user);
     if (result.error) {
       lastErr = result.error;
-      if (result.error.includes('not found')) continue; // try next model
+      if (result.error.includes('not found') || result.error === 'empty completion') continue; // try next model
       res.status(502).json({ error: result.error });
       return;
     }
