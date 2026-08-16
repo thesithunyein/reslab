@@ -123,33 +123,47 @@ flowchart TD
     J --> M[Citable Methods + Results<br/>via writeup function]
 ```
 
-## Repository layout
+## Project structure
 
 ```
 reslab/
-├─ assets/logo.png              # brand mark
-├─ api/writeup.js               # Vercel serverless function: grounded LLM writeup
-├─ packages/core/
+├─ api/
+│  └─ writeup.js                # Vercel serverless function: grounded LLM writeup
+├─ assets/
+│  └─ logo.png                  # brand mark
+├─ packages/core/               # the engine (npm workspace @reslab/core)
 │  ├─ src/
 │  │  ├─ special-functions.ts   # erf, normal, gamma, incomplete beta (verified)
-│  │  ├─ stats.ts               # t/Welch/paired/ANOVA/Pearson/Mann-Whitney/
-│  │  │                         #   Levene/Jarque-Bera + power analysis
+│  │  ├─ stats.ts               # t / Welch / paired / ANOVA / Pearson /
+│  │  │                         #   Mann-Whitney / Levene / Jarque-Bera + power
 │  │  ├─ verify.ts              # hard verification (no NaN/out-of-range ever)
 │  │  ├─ audit.ts               # hash-chained, tamper-evident audit log
 │  │  ├─ power.ts               # design-phase power analysis
-│  │  ├─ prereg.ts              # pre-registration design, lock, checksum, versioning
-│  │  ├─ lanes.ts               # confirmatory/exploratory lane enforcement
-│  │  └─ detectors.ts           # p-hacking / HARKing deviation detectors
-│  ├─ test/                     # 78 tests, all green
-│  └─ examples/honest-flow.ts   # end-to-end demo (npm run demo)
-├─ web/                         # product site (Vite + TypeScript)
-│  ├─ src/                      # analyzer, study flow, proof layer, landing page
-│  ├─ public/                   # static assets
-│  └─ vite.config.ts            # docs/ for GitHub Pages, dist/ for Vercel
+│  │  ├─ prereg.ts              # pre-registration lock, checksum, versioning
+│  │  ├─ lanes.ts               # confirmatory / exploratory lane enforcement
+│  │  ├─ detectors.ts           # p-hacking / HARKing deviation detectors
+│  │  ├─ llm/                   # Featherless client + grounded report writer (CLI)
+│  │  └─ index.ts               # public API surface
+│  ├─ test/                     # 7 suites, 78 tests, all green
+│  └─ examples/                 # honest-flow demo + report generator
+├─ web/                         # product site (npm workspace @reslab/web)
+│  ├─ src/
+│  │  ├─ main.ts / styles.css   # app shell and design system
+│  │  ├─ csv.ts / csv-parser.ts # CSV analyzer: plain-English verdict + receipt
+│  │  ├─ proof.ts               # proof layer: graph, report, downloads, writeup
+│  │  └─ study.ts               # pre-registration workspace (one-click flow)
+│  ├─ public/                   # logo, hero/dashboard videos, CNAME
+│  ├─ index.html
+│  ├─ vite.config.ts            # docs/ for GitHub Pages, dist/ for Vercel
+│  └─ package.json
 ├─ docs/                        # static build of the site (GitHub Pages fallback)
-└─ .github/workflows/
-   ├─ ci.yml                    # typecheck + tests on every push
-   └─ deploy.yml                # Cloudflare Pages deploy (optional, token-gated)
+├─ local/                       # private working notes (submission, video script)
+├─ .github/workflows/
+│  ├─ ci.yml                    # typecheck + tests on every push
+│  └─ deploy.yml                # optional Cloudflare Pages deploy (token-gated)
+├─ vercel.json                  # Vercel build command + output directory
+├─ tsconfig.base.json           # shared TypeScript config
+└─ package.json                 # npm workspaces: packages/*, web
 ```
 
 ## Live site
@@ -245,23 +259,12 @@ approximation, Lanczos ln Γ, continued-fraction incomplete beta).
 
 ## Roadmap
 
-**Shipped**
-- [x] Stats engine + hard verification (validated against scipy/R references)
-- [x] Pre-registration with tamper-evident locking and versioning
-- [x] Confirmatory/exploratory lane enforcement
-- [x] P-hacking deviation detectors
-- [x] Hash-chained audit log + reproducibility recipe
-- [x] End-to-end honest-flow demo
-- [x] Web UI (Vite) with in-browser CSV analyzer
-- [x] Proof layer: interactive graph, structured report, raw-data downloads
-- [x] Live site at reslab.sithunyein.com (Vercel, HTTPS)
-- [x] Featherless-grounded writeup (serverless, key kept server-side)
-
-**Next**
-- [ ] More methods in the analyzer UI (ANOVA, correlation, paired t, chi-square)
-- [ ] Exportable Markdown/PDF research report
-- [ ] User-driven pre-registration (custom title, hypothesis, planned test)
-- [ ] Saved studies + accounts
+| Milestone | Status | Scope |
+| --- | --- | --- |
+| **v0.1 · Honest core** | ✅ Shipped | Verified stats engine, pre-registration locking, confirmatory/exploratory lanes, p-hacking detectors, hash-chained audit log |
+| **v0.2 · Product** | ✅ Shipped | Web UI with in-browser analyzer, proof layer (graph + report + raw data), live site, Featherless-grounded writeup |
+| **v0.3 · Breadth** | 🚧 In progress | ANOVA, correlation, paired t, chi-square in the analyzer UI; exportable Markdown/PDF report |
+| **v0.4 · Multi-user** | 🧭 Planned | User-driven pre-registration, saved studies, accounts |
 
 ## License
 
