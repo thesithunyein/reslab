@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ResLab — the lab notebook that keeps science honest</title>
-  <meta name="description" content="Design, pre-register, analyze, verify, detect. Real statistics, hard verification, tamper-evident provenance. Analyze your own CSV in the browser — your data never leaves your machine." />
+  <title>ResLab | the lab notebook that keeps science honest</title>
+  <meta name="description" content="Design, pre-register, analyze, verify, detect. Real statistics, hard verification, tamper-evident provenance. Analyze your own CSV in the browser; your data never leaves your machine." />
   <link rel="icon" type="image/png" href="./assets/logo.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -28,9 +28,9 @@
     <div class="hero-glow"></div>
     <div class="wrap hero-inner">
       <div class="hero-copy reveal">
-        <div class="kicker-pill"><span class="pulse-dot"></span>Real engine · running in your browser</div>
+        <div class="kicker-pill"><span class="pulse-dot"></span>Real engine, running in your browser</div>
         <h1>The lab notebook that <em>keeps science honest.</em></h1>
-        <p class="sub">Design a study. Pre-register it. Analyze with verified statistics — on a tamper-evident audit trail.</p>
+        <p class="sub">Design a study. Pre-register it. Analyze with verified statistics on a tamper-evident audit trail.</p>
         <div class="cta-row">
           <a class="btn btn-primary" href="#analyze">Analyze your CSV <span class="arr">→</span></a>
           <a class="btn btn-ghost" href="https://github.com/thesithunyein/reslab" target="_blank" rel="noopener">View source</a>
@@ -42,42 +42,9 @@
         </div>
       </div>
 
-      <!-- Live product window: real engine, auto-played -->
-      <div class="studio-wrap reveal">
-        <div class="studio">
-          <div class="studio-bar">
-            <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
-            <span class="studio-title">ResLab Studio — pre-registered analysis</span>
-            <button class="replay" id="heroReplay" title="Replay">↻</button>
-            <span class="live-pill">LIVE</span>
-          </div>
-          <div class="studio-body">
-            <div class="studio-side" id="heroSteps">
-              <button class="s-step active" data-s="0"><span class="s-idx">1</span>Design</button>
-              <button class="s-step" data-s="1"><span class="s-idx">2</span>Pre-register</button>
-              <button class="s-step" data-s="2"><span class="s-idx">3</span>Analyze</button>
-              <button class="s-step" data-s="3"><span class="s-idx">4</span>Detect</button>
-              <button class="s-step" data-s="4"><span class="s-idx">5</span>Prove</button>
-            </div>
-            <div class="studio-main">
-              <div class="studio-output" id="heroOutput"></div>
-              <div class="hero-summary hidden" id="heroSummary">
-                <div class="hs-head"><span class="hs-check">✓</span> Verified confirmatory result</div>
-                <div class="hs-grid">
-                  <div class="hs-cell"><div class="hs-num" id="hsT">—</div><div class="hs-lab">t</div></div>
-                  <div class="hs-cell"><div class="hs-num" id="hsDf">—</div><div class="hs-lab">df</div></div>
-                  <div class="hs-cell"><div class="hs-num" id="hsP">—</div><div class="hs-lab">p</div></div>
-                  <div class="hs-cell"><div class="hs-num" id="hsD">—</div><div class="hs-lab">Cohen's d</div></div>
-                </div>
-                <div class="hs-chips">
-                  <span class="chip ok" id="hsVer">hard verification PASSED</span>
-                  <span class="chip warn" id="hsFlag">guardian: optional stopping</span>
-                  <span class="chip dim" id="hsHash">audit chain INTACT</span>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="studio-status" id="heroStatus">booting reslab engine…</div>
+      <div class="hero-visual reveal">
+        <div class="media-frame">
+          <video class="media-video" src="./assets/hero-brand.mp4" poster="./assets/hero-brand-poster.jpg" autoplay muted loop playsinline></video>
         </div>
       </div>
     </div>
@@ -89,7 +56,7 @@
       <div class="stat"><div class="stat-num">78</div><div class="stat-lab">automated tests, green in CI</div></div>
       <div class="stat"><div class="stat-num">8+</div><div class="stat-lab">statistical methods, hard-verified</div></div>
       <div class="stat"><div class="stat-num">SHA-256</div><div class="stat-lab">hash-chained audit log</div></div>
-      <div class="stat"><div class="stat-num">100%</div><div class="stat-lab">in-browser — data never leaves</div></div>
+      <div class="stat"><div class="stat-num">100%</div><div class="stat-lab">in-browser, data never leaves</div></div>
     </div>
   </section>
 
@@ -98,7 +65,7 @@
     <div class="wrap">
       <div class="kicker">Analyze your data</div>
       <h2>Drop a CSV. <em class="grad">Get the honest result.</em></h2>
-      <p class="lead">ResLab picks the right two-group test from your data's own assumptions — and records everything on an audit trail.</p>
+      <p class="lead">ResLab picks the right two-group test from your data's own assumptions and records everything on an audit trail.</p>
       <div class="csv-card reveal">
         <div class="dropzone" id="dropzone">
           <input type="file" id="fileInput" accept=".csv,.tsv,text/csv,text/plain" hidden />
@@ -107,7 +74,7 @@
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 16V4M7 9l5-5 5 5"/><path d="M4 15v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg>
             </div>
             <p><strong>Drop a CSV here</strong> or <span class="link" id="browseLink">browse</span></p>
-            <p class="dz-hint">Two numeric columns → mean comparison · or any table for group tests</p>
+            <p class="dz-hint">Two numeric columns → mean comparison · any table for group tests</p>
             <button class="btn btn-ghost sample-btn" id="sampleBtn">or try the sample dataset →</button>
           </div>
         </div>
@@ -121,12 +88,21 @@
     </div>
   </section>
 
+  <!-- PRODUCT SHOWCASE -->
+  <section class="showcase">
+    <div class="wrap">
+      <div class="media-frame wide reveal">
+        <video class="media-video" src="./assets/section-features.mp4" poster="./assets/section-features-poster.jpg" autoplay muted loop playsinline></video>
+      </div>
+    </div>
+  </section>
+
   <!-- VERIFICATION -->
   <section id="verify">
     <div class="wrap">
       <div class="kicker">Verification, not vibes</div>
       <h2>Validated against <em class="grad">known values</em></h2>
-      <p class="lead">Cross-checked against published references — the numbers you'd get from R or scipy — in an automated suite.</p>
+      <p class="lead">Cross-checked against published references, the numbers you'd get from R or scipy, in an automated suite.</p>
       <div class="verify-layout reveal">
         <div class="verify-card">
           <table>
@@ -141,9 +117,12 @@
         </div>
         <div class="verify-side">
           <div class="v-item"><span class="v-ico">⚙</span><div><strong>Hard verification</strong><p>No NaN or out-of-range p/df/n can enter the record.</p></div></div>
-          <div class="v-item"><span class="v-ico">🔗</span><div><strong>Hash-chained audit</strong><p>A silent edit breaks the chain — visibly.</p></div></div>
-          <a class="btn btn-ghost wide" href="https://github.com/thesithunyein/reslab" target="_blank" rel="noopener">Browse the source &amp; tests ↗</a>
+          <div class="v-item"><span class="v-ico">🔗</span><div><strong>Hash-chained audit</strong><p>A silent edit breaks the chain, visibly.</p></div></div>
+          <a class="btn btn-ghost wide" href="https://github.com/thesithunyein/reslab" target="_blank" rel="noopener">Browse the source and tests ↗</a>
         </div>
+      </div>
+      <div class="media-frame wide reveal">
+        <video class="media-video" src="./assets/section-dashboard.mp4" poster="./assets/section-dashboard-poster.jpg" autoplay muted loop playsinline></video>
       </div>
     </div>
   </section>
@@ -151,7 +130,7 @@
   <footer>
     <div class="wrap">
       <img src="./assets/logo.png" alt="ResLab" width="40" />
-      <p class="f-brand"><strong>ResLab</strong> — built for Impact Forge 2026. Every number is computed, verified, and reproducible.</p>
+      <p class="f-brand"><strong>ResLab</strong>. Every number is computed, verified, and reproducible.</p>
       <p class="f-links"><a href="https://github.com/thesithunyein/reslab" target="_blank" rel="noopener">github.com/thesithunyein/reslab</a> · reslab.sithunyein.com</p>
       <div class="f-flow">design → pre-register → analyze → verify → detect</div>
     </div>

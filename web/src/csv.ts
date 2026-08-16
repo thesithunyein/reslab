@@ -85,7 +85,7 @@ export class CsvAnalyzer {
     const text = await file.text();
     const rows = parseCsv(text);
     if (rows.length < 2) {
-      this.status.textContent = '✗ Could not parse the file — expected a CSV with a header row.';
+      this.status.textContent = '✗ Could not parse the file. Expected a CSV with a header row.';
       return;
     }
     this.headers = rows[0]!.map((h) => h.trim());
@@ -196,7 +196,7 @@ export class CsvAnalyzer {
     const push = (text: string, cls = ''): void => {
       lines.push({ text, cls });
     };
-    push(`ResLab analysis — ${groupName} vs ${valueName}  (exploratory lane, labeled post-hoc)`);
+    push(`ResLab analysis: ${groupName} vs ${valueName}  (exploratory lane, labeled post-hoc)`);
     push(`========================================================================`, 't-rule');
     push(`${gA}:  n=${da.n}  mean=${f4(da.mean)}  sd=${f4(da.sd)}  median=${f4(da.median)}`);
     push(`${gB}:  n=${db.n}  mean=${f4(db.mean)}  sd=${f4(db.sd)}  median=${f4(db.median)}`);
@@ -209,7 +209,7 @@ export class CsvAnalyzer {
     push(`  statistic = ${f4(result.statistic)}  ${result.df !== undefined ? `df = ${f4(result.df)}  ` : ''}p = ${f4(result.p)}${result.effectSize !== undefined ? `  effect = ${f4(result.effectSize)}` : ''}`);
     push(`  Hard verification: ${verification.ok ? 'PASSED ✓' : 'FAILED ✗'}   ${verification.errors.join('; ')}`, verification.ok ? 't-ok' : 't-err');
     push(`  Audit chain: ${chain.valid ? 'INTACT ✓' : 'BROKEN ✗'} (${audit.length} events)`, chain.valid ? 't-ok' : 't-err');
-    push(`  Note: this is exploratory — it generates hypotheses, never conclusions.`, 't-dim');
+    push(`  Note: this is exploratory; it generates hypotheses, never conclusions.`, 't-dim');
     push(`  ${run.id.slice(0, 13)}… recorded in the audit log.`, 't-dim');
 
     this.status.innerHTML = lines.map((l) => `<div class="res-line ${l.cls}">${l.text}</div>`).join('');

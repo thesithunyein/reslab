@@ -2,7 +2,7 @@
   "name": "reslab",
   "version": "0.1.0",
   "private": true,
-  "description": "ResLab — the lab notebook that keeps science honest. Design, pre-register, analyze, and verify research with a tamper-evident audit trail.",
+  "description": "ResLab: the lab notebook that keeps science honest. Design, pre-register, analyze, and verify research with a tamper-evident audit trail.",
   "license": "MIT",
   "workspaces": [
     "packages/*",

@@ -1,7 +1,7 @@
 /**
  * ResLab report demo: run the honest flow, then generate a grounded
  * methods+results report from the ACTUAL computed statistics via
- * Featherless (GLM-5). The LLM never computes a number — it interprets
+ * Featherless (GLM-5). The LLM never computes a number; it interprets
  * the verified results and cites them.
  *
  * Run with: npm run report

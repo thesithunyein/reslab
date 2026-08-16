@@ -7,7 +7,7 @@
 <p align="center">
   <b>The lab notebook that keeps science honest.</b><br/>
   Design → pre-register → analyze → verify → detect.<br/>
-  Real statistics, hard verification, tamper-evident provenance — no hallucinations.
+  Real statistics, hard verification, tamper-evident provenance, no hallucinations.
 </p>
 
 <p align="center">
@@ -26,13 +26,13 @@
 
 The reproducibility crisis is the defining problem in research today: p-hacking,
 HARKing, and post-hoc test-switching quietly corrupt a large share of published
-findings. Most "AI for data" tools make it *worse* — they answer anything with
+findings. Most "AI for data" tools make it *worse*: they answer anything with
 confidence and never check whether the analysis was even appropriate.
 
 ResLab is the opposite. It treats research integrity as **infrastructure**:
 
 - **Every statistic is computed, not generated.** t-tests, Welch, paired t,
-  ANOVA, Pearson, Mann-Whitney, Levene, Jarque-Bera, power analysis — real
+  ANOVA, Pearson, Mann-Whitney, Levene, Jarque-Bera, power analysis. Real
   math, verified against known values before they can enter the record.
 - **Every result is hard-verified.** A result cannot be written to the audit
   log unless it passes code assertions (finite, in-range, correct df, valid n).
@@ -40,12 +40,12 @@ ResLab is the opposite. It treats research integrity as **infrastructure**:
   Any silent edit breaks the chain, and the break is visible.
 - **Confirmatory and exploratory analyses are separated lanes.**
   Claims come only from the pre-registered lane; post-hoc exploration is
-  allowed but labeled — it generates hypotheses, never conclusions.
+  allowed but labeled: it generates hypotheses, never conclusions.
 - **A deviation-detector suite catches p-hacking patterns**: test switching,
   tail switching, outcome switching, optional stopping, subgroup slicing,
   undeclared outlier removal, uncorrected multiple comparisons.
 
-> **Guardian, not police.** Deviations are flagged *for review* — the human
+> **Guardian, not police.** Deviations are flagged *for review*; the human
 > always decides. But the deviation is now visible, versioned, and auditable.
 
 ## What's computed vs. what's generated
@@ -98,16 +98,16 @@ reslab/
 │  │  └─ detectors.ts           # p-hacking / HARKing deviation detectors
 │  ├─ test/                     # 78 tests, all green
 │  └─ examples/honest-flow.ts   # end-to-end demo (npm run demo)
-├─ docs/                        # product site (static, dark isometric branding)
-│  └─ index.html                 #   GitHub Pages + reslab.sithunyein.com
+├─ docs/                        # product site (static, served via GitHub Pages)
+│  └─ index.html                 #   reslab.sithunyein.com
 └─ .github/workflows/ci.yml     # typecheck + tests on every push
    .github/workflows/deploy.yml # Cloudflare Pages deploy for docs/
 ```
 
 ## Live site
 
-The product site lives at **reslab.sithunyein.com** — the dark, isometric-branded
-front door with the real honest-flow demo output embedded.
+The product site lives at **reslab.sithunyein.com**: a clean, friendly landing
+page with a live CSV analyzer that runs the real engine in your browser.
 
 ## Quick start
 
@@ -132,7 +132,7 @@ The demo (`npm run demo`) runs the full flow on deterministic seeded data:
 
 ## Correctness: why you can trust the numbers
 
-The stats engine is not "vibe-checked" — it is **validated against known values**:
+The stats engine is not "vibe-checked"; it is **validated against known values**:
 
 - **t-tables**: `t(10, two-sided, α=0.05) = 2.228`, `t(20) = 2.086` → p ≈ 0.05
 - **F-tables**: `F(2,27, 0.95) = 3.354` → p ≈ 0.05
@@ -150,12 +150,12 @@ approximation, Lanczos ln Γ, continued-fraction incomplete beta).
 
 ## Design decisions (and why)
 
-- **Client-side computation.** Statistics run where the data lives — zero
+- **Client-side computation.** Statistics run where the data lives: zero
   server cost, instant results, and a privacy story ("your data never leaves
   your machine except the interpretation step"). The only network call is the
   LLM interpretation, routed through a worker that keeps the API key secret.
 - **Guided, not autonomous.** The agent never executes arbitrary code. It
-  calls a curated, tested analysis library with chosen parameters — the
+  calls a curated, tested analysis library with chosen parameters: the
   difference between "advanced" and "breaks live on stage."
 - **Guardian framing.** Detection is "for review," never forbidden. That is
   both the ethically correct design and the one that survives false positives.
@@ -168,14 +168,15 @@ approximation, Lanczos ln Γ, continued-fraction incomplete beta).
 - [x] P-hacking deviation detectors
 - [x] Hash-chained audit log + reproducibility recipe
 - [x] End-to-end honest-flow demo
-- [ ] Web UI (Vite SPA) + Featherless-backed interpretation layer
-- [ ] Live site at reslab.sithunyein.com (Cloudflare)
+- [x] Web UI (Vite) with in-browser CSV analyzer
+- [x] Live site at reslab.sithunyein.com
+- [x] Featherless-backed interpretation layer
 - [ ] Exportable Markdown/PDF research report
 
 ## License
 
-MIT — see [LICENSE](LICENSE).
+MIT. See [LICENSE](LICENSE).
 
 ---
 
-*Built for Impact Forge 2026. Every number in this repository is computed, verified, and reproducible.*
+*Every number in this repository is computed, verified, and reproducible.*
