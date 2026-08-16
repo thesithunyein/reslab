@@ -170,17 +170,11 @@ h1 em { font-style: normal; background: var(--grad); -webkit-background-clip: te
   border-color: var(--accent); color: var(--text);
   box-shadow: 0 0 0 4px var(--accent-soft), var(--shadow-sm);
 }
-.s-step.active .s-ico { animation: pop 0.3s ease; }
 .s-step.done {
   border-color: rgba(111, 174, 63, 0.5); background: rgba(111, 174, 63, 0.08); color: var(--ok);
 }
 .s-step.done .s-check { display: inline-flex; }
 .s-step.done .s-ico { display: none; }
-@keyframes pop {
-  0% { transform: scale(0.6); }
-  60% { transform: scale(1.15); }
-  100% { transform: scale(1); }
-}
 .study-cta {
   display: flex; align-items: center; justify-content: center; gap: 16px;
   margin-top: 28px; flex-wrap: wrap;
@@ -227,9 +221,9 @@ h1 em { font-style: normal; background: var(--grad); -webkit-background-clip: te
   background: var(--panel); border: 1px solid var(--line); border-radius: 16px;
   box-shadow: var(--shadow-sm); padding: 18px 20px;
 }
-.proof-head { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 13.5px; color: var(--text); }
+.proof-head { display: flex; align-items: center; gap: 10px; }
 .proof-ico { width: 34px; height: 34px; border-radius: 10px; flex: 0 0 34px; }
-.proof-ico svg { width: 17px; height: 17px; }
+.proof-ico svg { width: 17px; height: 17px; } font-weight: 700; font-size: 13.5px; color: var(--text); }
 .proof-head .chip { margin-left: auto; }
 .graph-wrap { position: relative; margin-top: 14px; }
 .proof-graph { width: 100%; height: auto; display: block; }
@@ -289,19 +283,13 @@ h1 em { font-style: normal; background: var(--grad); -webkit-background-clip: te
 .faq-item summary::marker { content: ""; }
 .faq-item summary:hover { color: var(--accent); }
 .faq-q { flex: 1; }
-.faq-ico {
-  width: 32px; height: 32px; border-radius: 10px; flex: 0 0 32px;
-  background: #1d2b1b; color: #fff;
-  display: inline-flex; align-items: center; justify-content: center;
-}
-.faq-ico svg { width: 17px; height: 17px; }
 .faq-item summary::after {
   content: ""; width: 8px; height: 8px; flex: 0 0 8px;
   border-right: 2px solid var(--faint); border-bottom: 2px solid var(--faint);
   transform: rotate(45deg); transition: transform 0.2s, border-color 0.2s;
 }
 .faq-item[open] summary::after { transform: rotate(-135deg); border-color: var(--accent); }
-.faq-item p { padding: 0 20px 18px 66px; font-size: 14px; color: var(--muted); max-width: 640px; }
+.faq-item p { padding: 0 20px 18px; font-size: 14px; color: var(--muted); max-width: 640px; }
 .faq-item[open] p { animation: rise 0.25s ease both; }
 
 /* stats strip */
