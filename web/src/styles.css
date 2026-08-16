@@ -223,69 +223,6 @@ h2 { font-family: var(--display); font-size: clamp(28px, 3.6vw, 40px); font-weig
 .lead { color: var(--muted); max-width: 700px; margin-bottom: 28px; font-size: 15.5px; }
 p { color: var(--muted); }
 
-/* steps */
-.steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; margin-top: 20px; }
-.step {
-  position: relative;
-  background: linear-gradient(180deg, var(--panel-2), var(--panel));
-  border: 1px solid var(--line); border-radius: var(--radius); padding: 24px 22px 22px;
-  transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
-  overflow: hidden;
-}
-.step::before {
-  content: ""; position: absolute; inset: 0 0 auto 0; height: 2px;
-  background: var(--grad); opacity: 0; transition: opacity 0.25s;
-}
-.step:hover { border-color: #2b2b36; transform: translateY(-3px); box-shadow: 0 18px 44px rgba(0, 0, 0, 0.45); }
-.step:hover::before { opacity: 1; }
-.step-icon {
-  width: 40px; height: 40px; border-radius: 11px; margin-bottom: 14px;
-  display: flex; align-items: center; justify-content: center;
-  background: rgba(255, 201, 77, 0.08); border: 1px solid rgba(255, 201, 77, 0.22);
-  color: var(--warn);
-}
-.step-icon svg { width: 20px; height: 20px; }
-.step .num { font-family: var(--mono); color: var(--warn); font-size: 11px; letter-spacing: 1.5px; }
-.step h3 { margin: 8px 0 6px; font-size: 17px; font-family: var(--display); }
-.step p { font-size: 13.5px; line-height: 1.6; }
-
-/* demo */
-.demo-layout { display: grid; grid-template-columns: 280px 1fr; gap: 20px; align-items: start; }
-.stepper { display: flex; flex-direction: column; gap: 8px; position: sticky; top: 84px; }
-.step-btn {
-  display: flex; align-items: center; gap: 12px; text-align: left;
-  background: var(--panel); border: 1px solid var(--line); border-radius: 11px;
-  color: var(--muted); padding: 12px 14px; font-size: 14px; cursor: pointer;
-  transition: all 0.16s; font-family: var(--sans);
-}
-.step-btn:hover { border-color: #2f2f3a; }
-.step-btn .idx {
-  width: 25px; height: 25px; flex: 0 0 25px; border-radius: 8px;
-  display: inline-flex; align-items: center; justify-content: center;
-  font-family: var(--mono); font-size: 12px; font-weight: 700;
-  background: var(--panel-2); border: 1px solid var(--line); color: var(--faint);
-}
-.step-btn.active { border-color: rgba(255, 201, 77, 0.5); color: var(--text); background: rgba(255, 201, 77, 0.05); }
-.step-btn.active .idx { background: var(--warn); color: #000; border-color: var(--warn); }
-.step-btn.done { color: var(--text); }
-.step-btn.done .idx { background: var(--ok); color: #000; border-color: var(--ok); }
-.run-all { justify-content: center; margin-top: 8px; }
-.terminal {
-  background: #070709; border: 1px solid var(--line); border-radius: var(--radius);
-  overflow: hidden; box-shadow: 0 24px 70px rgba(0, 0, 0, 0.5);
-}
-.term-bar { display: flex; align-items: center; gap: 7px; padding: 12px 16px; border-bottom: 1px solid var(--line-soft); background: rgba(255, 255, 255, 0.02); }
-.term-bar .dot { width: 11px; height: 11px; border-radius: 50%; }
-.term-bar .r { background: #ff5f57; } .term-bar .y { background: #febc2e; } .term-bar .g { background: #28c840; }
-.term-title { margin-left: 8px; font-family: var(--mono); font-size: 11.5px; color: var(--faint); }
-.term-body {
-  padding: 20px 22px; min-height: 420px; max-height: 620px; overflow-y: auto;
-  font-family: var(--mono); font-size: 13px; line-height: 1.65; color: var(--code);
-  white-space: pre-wrap; word-break: break-word;
-}
-.term-body .t-line { animation: rise 0.25s ease both; }
-.status-row { margin-top: 14px; min-height: 24px; font-family: var(--mono); font-size: 13px; color: var(--ok); }
-
 /* CSV */
 .csv-card {
   background: linear-gradient(180deg, var(--panel-2), var(--panel));
@@ -347,9 +284,6 @@ footer img { opacity: 0.9; }
 @media (max-width: 960px) {
   .hero-inner { grid-template-columns: 1fr; gap: 40px; }
   .stats-grid { grid-template-columns: repeat(2, 1fr); margin-top: 0; }
-  .demo-layout { grid-template-columns: 1fr; }
-  .stepper { position: static; flex-direction: row; flex-wrap: wrap; }
-  .run-all { margin-top: 0; }
   .csv-controls { grid-template-columns: 1fr; }
   .verify-layout { grid-template-columns: 1fr; }
 }

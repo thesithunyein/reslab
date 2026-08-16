@@ -1,15 +1,6 @@
 import './styles.css';
-import { HonestFlowDemo } from './demo';
 import { CsvAnalyzer } from './csv';
 import { HeroStudio } from './hero';
-
-function line(el: HTMLElement, text: string, cls = ''): void {
-  const div = document.createElement('div');
-  div.className = `t-line ${cls}`.trim();
-  div.textContent = text;
-  el.appendChild(div);
-  el.scrollTop = el.scrollHeight;
-}
 
 function initReveal(): void {
   const els = Array.from(document.querySelectorAll<HTMLElement>('.reveal'));
@@ -58,32 +49,6 @@ function initHero(): void {
   }
 }
 
-function initDemo(): void {
-  const output = document.getElementById('demoOutput') as HTMLElement;
-  const status = document.getElementById('demoStatus') as HTMLElement;
-  const demo = new HonestFlowDemo((t, c) => line(output, t, c), (s) => (status.textContent = s));
-  void demo.init();
-
-  const btns = Array.from(document.querySelectorAll<HTMLButtonElement>('.step-btn[data-step]'));
-  btns.forEach((btn) => {
-    btn.addEventListener('click', () => {
-      const step = Number(btn.dataset.step);
-      if (step >= 1 && step <= 5) {
-        void demo.runStep(step);
-        btn.classList.remove('active');
-        btn.classList.add('done');
-      }
-    });
-  });
-  document.getElementById('runAll')!.addEventListener('click', () => {
-    void demo.runAll();
-    btns.forEach((b) => {
-      b.classList.remove('active');
-      b.classList.add('done');
-    });
-  });
-}
-
 function initCsv(): void {
   const el = (id: string): HTMLElement => document.getElementById(id)!;
   new CsvAnalyzer(
@@ -101,5 +66,4 @@ function initCsv(): void {
 
 initReveal();
 initHero();
-initDemo();
 initCsv();
