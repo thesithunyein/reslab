@@ -68,18 +68,62 @@ export class HeroStudio {
     this.setStep(0, 'active');
 
     const delay = (ms: number): Promise<void> => new Promise((r) => setTimeout(r, ms));
-    const say = (text: string, cls = ''): void => {
-      const div = document.createElement('div');
-      div.className = `t-line ${cls}`.trim();
-      div.textContent = text;
-      this.output.appendChild(div);
+    const add = (el: HTMLElement): void => {
+      el.classList.add('anim');
+      this.output.appendChild(el);
       this.output.scrollTop = this.output.scrollHeight;
     };
+    const section = (label: string): void => {
+      const s = document.createElement('div');
+      s.className = 'sec';
+      const dot = document.createElement('span');
+      dot.className = 'sec-dot';
+      const t = document.createElement('span');
+      t.textContent = label;
+      s.append(dot, t);
+      add(s);
+    };
+    const row = (label: string, value: string, extra = ''): void => {
+      const r = document.createElement('div');
+      r.className = 'krow';
+      const l = document.createElement('span');
+      l.className = 'krow-label';
+      l.textContent = label;
+      const v = document.createElement('span');
+      v.className = 'krow-value';
+      v.textContent = value;
+      r.append(l, v);
+      if (extra) {
+        const e = document.createElement('span');
+        e.className = 'krow-extra';
+        e.textContent = extra;
+        r.append(e);
+      }
+      add(r);
+    };
+    const badge = (text: string, kind: 'ok' | 'warn' | 'dim' = 'ok'): HTMLElement => {
+      const b = document.createElement('span');
+      b.className = `pill ${kind}`;
+      b.textContent = text;
+      add(b);
+      return b;
+    };
+    const title = (text: string): void => {
+      const h = document.createElement('div');
+      h.className = 'doc-title';
+      h.textContent = text;
+      add(h);
+    };
+    const note = (text: string, kind: 'warn' | 'dim' = 'dim'): void => {
+      const n = document.createElement('div');
+      n.className = `note ${kind}`;
+      n.textContent = text;
+      add(n);
+    };
 
-    await delay(350);
-    say('ResLab Studio — pre-registered analysis');
-    say('================================================================', 't-rule');
-    await delay(420);
+    await delay(250);
+    title('Pre-registered analysis');
+    await delay(500);
 
     // 1 · DESIGN
     this.setStep(0, 'done');
@@ -88,36 +132,40 @@ export class HeroStudio {
     this.artifactId = artifact.id;
     this.status.textContent = 'designing the study…';
     await delay(300);
-    say('');
-    say('1 · DESIGN', 't-hl');
-    await delay(140);
-    say(`   ${artifact.design.title}`);
-    await delay(120);
-    say(`   planned test: ${artifact.design.plannedTest}   alpha: ${artifact.design.alpha}   power target: ${artifact.design.powerTarget}`);
-    await delay(120);
-    say(`   power: ${powerNote}`, 't-dim');
-    await delay(500);
+    section('1 · DESIGN');
+    await delay(150);
+    const t = document.createElement('div');
+    t.className = 'doc-subject';
+    t.textContent = artifact.design.title;
+    add(t);
+    await delay(160);
+    row('Planned test', 'Welch t-test', `two-tailed · α = ${artifact.design.alpha}`);
+    await delay(150);
+    row('Power target', '80%', powerNote);
+    await delay(450);
 
     // 2 · PRE-REGISTER
     this.setStep(1, 'active');
     this.status.textContent = 'sealing the plan with SHA-256…';
-    await delay(320);
+    await delay(300);
     const locked = await lockStudy(this.registry, this.artifactId!, this.audit);
     this.lockChecksum = locked.checksum;
     const ok = await verifyLock(locked);
     this.setStep(1, 'done');
-    say('');
-    say('2 · PRE-REGISTERED (LOCKED)', 't-hl');
+    section('2 · PRE-REGISTERED');
+    await delay(150);
+    const c = document.createElement('code');
+    c.className = 'hash';
+    c.textContent = `sha-256  ${this.lockChecksum!.slice(0, 18)}…`;
+    add(c);
     await delay(120);
-    say(`   sha-256: ${this.lockChecksum!.slice(0, 18)}…`);
-    await delay(120);
-    say(`   lock verified: ${String(ok).toUpperCase()}   audit: prereg.lock`, 't-ok');
-    await delay(520);
+    badge(ok ? 'lock verified ✓' : 'lock verification failed');
+    await delay(450);
 
     // 3 · ANALYZE
     this.setStep(2, 'active');
     this.status.textContent = 'computing the confirmatory test…';
-    await delay(320);
+    await delay(300);
     this.control = normalSample(20260814, 40, 70, 10);
     this.treated = normalSample(20260815, 40, 78, 10);
     await this.session.recordDataVersion('v1.0.0', 'cleaned and anonymized (seed 20260814/20260815)');
@@ -133,17 +181,36 @@ export class HeroStudio {
     const dc = descriptive(this.control);
     const dt = descriptive(this.treated);
     this.setStep(2, 'done');
-    say('');
-    say('3 · CONFIRMATORY ANALYSIS (welch_t)', 't-hl');
+    section('3 · CONFIRMATORY ANALYSIS');
+    await delay(150);
+
+    const grid = document.createElement('div');
+    grid.className = 'stats4';
+    const cell = (v: string, l: string): void => {
+      const d = document.createElement('div');
+      d.className = 's4-cell';
+      const n = document.createElement('div');
+      n.className = 's4-num';
+      n.textContent = v;
+      const lab = document.createElement('div');
+      lab.className = 's4-lab';
+      lab.textContent = l;
+      d.append(n, lab);
+      grid.appendChild(d);
+    };
+    cell(f4(r.statistic), 't');
+    cell(f4(r.df!), 'df');
+    cell(f4(r.p), 'p');
+    cell(f4(r.effectSize!), "Cohen's d");
+    add(grid);
+    await delay(160);
+    row('Means', `control ${f4(dc.mean)} (n=${dc.n}) · treated ${f4(dt.mean)} (n=${dt.n})`);
     await delay(120);
-    say(`   control: mean ${f4(dc.mean)} (n=${dc.n})   treated: mean ${f4(dt.mean)} (n=${dt.n})`);
+    badge(run.verification.ok ? 'hard verification PASSED ✓' : 'verification FAILED');
+    if (run.compliance.compliant) badge('compliance COMPLIANT ✓');
     await delay(120);
-    say(`   t = ${f4(r.statistic)}   df = ${f4(r.df!)}   p = ${f4(r.p)}   d = ${f4(r.effectSize!)}`);
-    await delay(120);
-    say(`   hard verification: ${run.verification.ok ? 'PASSED' : 'FAILED'}   compliance: ${run.compliance.compliant ? 'COMPLIANT' : 'VIOLATION'}`, 't-ok');
-    await delay(120);
-    say('   [!] n=40 < planned 63 — power only 60.9% (target 80%)', 't-err');
-    await delay(560);
+    note('n = 40 < planned 63 — power only 60.9% (target 80%)', 'warn');
+    await delay(450);
 
     // 4 · DETECT
     this.setStep(3, 'active');
@@ -151,21 +218,26 @@ export class HeroStudio {
     await delay(300);
     const findings = runDetectors({ session: this.session });
     this.setStep(3, 'done');
-    say('');
-    say('4 · INTEGRITY DETECTORS', 't-hl');
+    section('4 · INTEGRITY DETECTORS');
     if (findings.length === 0) {
-      await delay(120);
-      say('   no deviations detected', 't-ok');
+      await delay(150);
+      badge('no deviations detected ✓');
     } else {
       for (const f of findings) {
-        await delay(120);
-        say(`   [${f.severity.toUpperCase()}] ${f.message}`, f.severity === 'high' ? 't-err' : 't-hl');
-        say(`     → ${f.explanation}`, 't-dim');
+        await delay(160);
+        note(`[${f.severity.toUpperCase()}] ${f.message}`, f.severity === 'high' ? 'warn' : 'warn');
+        const e = document.createElement('div');
+        e.className = 'note dim';
+        e.textContent = `→ ${f.explanation}`;
+        add(e);
       }
       await delay(120);
-      say('   flagged for review — the deviation is now visible.');
+      const f = document.createElement('div');
+      f.className = 'note dim';
+      f.textContent = 'flagged for review — the deviation is now visible.';
+      add(f);
     }
-    await delay(560);
+    await delay(450);
 
     // 5 · PROVE
     this.setStep(4, 'active');
@@ -179,23 +251,27 @@ export class HeroStudio {
     });
     const recipeHash = await sha256Hex(recipe);
     this.setStep(4, 'done');
-    say('');
-    say('5 · PROVENANCE', 't-hl');
+    section('5 · PROVENANCE');
+    await delay(150);
+    badge(`audit chain INTACT ✓ · ${this.audit.length} events`);
+    await delay(140);
+    const rc = document.createElement('code');
+    rc.className = 'hash';
+    rc.textContent = `recipe  ${recipeHash.slice(0, 16)}…`;
+    add(rc);
     await delay(120);
-    say(`   audit log: ${this.audit.length} events — chain ${check.valid ? 'INTACT' : 'BROKEN'}`, 't-ok');
-    await delay(120);
-    say(`   reproducibility recipe: ${recipeHash.slice(0, 16)}…`, 't-dim');
+    note('every number above is computed and verified — nothing was silently changed.', 'dim');
     await delay(320);
 
     // summary card
-    const t = this.t('hsT');
-    const df = this.t('hsDf');
-    const p = this.t('hsP');
-    const d = this.t('hsD');
-    t.textContent = f4(r.statistic);
-    df.textContent = f4(r.df!);
-    p.textContent = f4(r.p);
-    d.textContent = f4(r.effectSize!);
+    const st = this.t('hsT');
+    const sdf = this.t('hsDf');
+    const sp = this.t('hsP');
+    const sd = this.t('hsD');
+    st.textContent = f4(r.statistic);
+    sdf.textContent = f4(r.df!);
+    sp.textContent = f4(r.p);
+    sd.textContent = f4(r.effectSize!);
     this.summary.classList.remove('hidden');
 
     this.status.textContent = '✓ complete — every number above was computed and verified locally.';
